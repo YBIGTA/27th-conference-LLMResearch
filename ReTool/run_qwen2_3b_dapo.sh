@@ -6,14 +6,14 @@ export VLLM_USE_V1=1
 HDFS_ROOT=${HDFS_ROOT:-$PWD}
 DATA_ROOT=${DATA_ROOT:-$PWD}
 
-aime_2024=/root/ReTool-RL/data/Maxwell-Jia/AIME_2024-rl
-aime_2025=/root/ReTool-RL/data/yentinglin/aime_2025-rl
-dapo_math_17k=/root/ReTool-RL/data/BytedTsinghua-SIA/DAPO-Math-17k-rl
+aime_2024=/root/27th-conference-LLMResearch/data/Maxwell-Jia/AIME_2024-rl
+aime_2025=/root/27th-conference-LLMResearch/data/yentinglin/aime_2025-rl
+dapo_math_17k=/root/27th-conference-LLMResearch/data/BytedTsinghua-SIA/DAPO-Math-17k-rl
 
 #dapo_math_17k=$DATA_ROOT/dataset/BytedTsinghua-SIA/DAPO-Math-17k
 # aime_2024=$DATA_ROOT/dataset/Maxwell-Jia/AIME_2024
 # aime_2025=$DATA_ROOT/dataset/yentinglin/aime_2025
-model_path=/root/ReTool-SFT/checkpoint/multiturn-sft-qwen-2.5-3b-instruct/global_step_62
+model_path=/root/27th-conference-LLMResearch/ReTool/ReTool-SFT/model/checkpoint/multiturn-sft-qwen-2.5-3b-instruct/global_step_62
 
 
 
@@ -21,7 +21,7 @@ train_files="['$dapo_math_17k']"
 test_files="['$aime_2025', '$aime_2024']"
 
 # tool
-tool_config_path=recipe/retool/sandbox_fusion_tool_config.yaml
+tool_config_path=/root/27th-conference-LLMResearch/ReTool/sandbox_fusion_tool_config.yaml
 
 # wandb
 project_name=retool
