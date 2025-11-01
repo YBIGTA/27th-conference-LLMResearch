@@ -58,8 +58,8 @@ def convert(repo_id, out_dir, splits=None, num_proc=1):
 
 if __name__ == "__main__":
     # AIME_2024 : 컬럼 ['ID','Problem','Solution','Answer'] 지원됨
-    convert("Maxwell-Jia/AIME_2024", "/root/ReTool-RL/data/Maxwell-Jia/AIME_2024-rl", num_proc=1)
+    convert("Maxwell-Jia/AIME_2024", "/root/27th-conference-LLMResearch/data/Maxwell-Jia/AIME_2024-rl", num_proc=1)
     # DAPO-Math-17k
-    convert("BytedTsinghua-SIA/DAPO-Math-17k", "/root/ReTool-RL/data/BytedTsinghua-SIA/DAPO-Math-17k-rl", num_proc=1)
+    convert("BytedTsinghua-SIA/DAPO-Math-17k", "/root/27th-conference-LLMResearch/data/BytedTsinghua-SIA/DAPO-Math-17k-rl", num_proc=1)
     # AIME_2025
-    convert("yentinglin/aime_2025", "/root/ReTool-RL/data/yentinglin/aime_2025-rl", num_proc=1)
+    convert("yentinglin/aime_2025", "/root/27th-conference-LLMResearch/data/yentinglin/aime_2025-rl", num_proc=1)

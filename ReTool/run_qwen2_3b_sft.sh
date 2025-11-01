@@ -13,10 +13,10 @@ experiment_name=multiturn-sft-qwen-2.5-3b-instruct
 HDFS_ROOT=${HDFS_ROOT:-$PWD}
 DATA_ROOT=${DATA_ROOT:-$PWD}
 
-TRAIN_DATA=/root/ReTool-SFT/data/train-00000-of-00001.parquet
-EVAL_DATA=/root/ReTool-SFT/data/train-00000-of-00001.parquet
-MODEL_PATH=/root/ReTool-SFT/model/Qwen2.5-3B-Instruct
-SAVE_PATH=/root/ReTool-SFT/checkpoint/$experiment_name
+TRAIN_DATA=/root/27th-conference-LLMResearch/ReTool/ReTool-SFT/data/train-00000-of-00001.parquet
+EVAL_DATA=/root/27th-conference-LLMResearch/ReTool/ReTool-SFT/data/train-00000-of-00001.parquet
+MODEL_PATH=/root/verl/model/Qwen2.5-3B-Instruct
+SAVE_PATH=/root/27th-conference-LLMResearch/ReTool/ReTool-SFT/model
 
 torchrun --nnodes=$nnodes \
      --nproc_per_node=$nproc_per_node \
