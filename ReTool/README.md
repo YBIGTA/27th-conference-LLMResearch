@@ -22,7 +22,7 @@
 ## SFT
 1. Data preparation
 ```bash
-hf download Qwen/Qwen2.5-3B-Instruct
+hf download Qwen/Qwen2.5-3B-Instruct --local-dir /root/ReTool-SFT/model/Qwen2.5-3B-Instruct
 
 python3 recipe/retool/retool_sft_preprocess.py
 ```
