@@ -73,6 +73,13 @@ def get_dataloader_adastar(args, tokenizer, rank, world_size):
         dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
+    elif args.task == "mate":
+        dataset_train = load_dataset("json", data_files="./datasets/data_mate/val.jsonl")["train"]
+        dataset_test = load_dataset("json", data_files="./datasets/data_mate/test.jsonl")["train"]
+        
+        dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
+        dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
+
     elif args.task == "cladder":
         dataset_train = load_dataset("json", data_files="./datasets/data_cladder_split/cladder_train_long.jsonl")["train"]
         dataset_test = load_dataset("json", data_files="./datasets/data_cladder_split/cladder_test.jsonl")["train"]

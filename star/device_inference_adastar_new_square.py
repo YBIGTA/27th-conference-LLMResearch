@@ -37,6 +37,9 @@ def write_new_data(args, pred, data, endoftext):
     elif args.task == "svamp":
         q = data["question_concat"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
+    elif args.task == "mate":
+        q = data["question_concat"]
+        new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "cladder":
         q = data["question"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
@@ -89,6 +92,14 @@ def test_metric_STaR(args, predictions, datas, tokenizer, rank):
             pred_answer = matches[-1].group(1) if matches else None
         
         elif args.task == "svamp":
+            matches = re.findall(r"-?\d+\.?\d*", pred)
+            pred_answer = matches[-1] if matches else None
+            ref_match = re.search(r"-?\d+\.?\d*", str(answer))
+            ref_answer = ref_match.group(0) if ref_match else None
+            if pred_answer == ref_answer:
+                cur_correct = True
+
+        elif args.task == "mate":
             matches = re.findall(r"-?\d+\.?\d*", pred)
             pred_answer = matches[-1] if matches else None
             ref_match = re.search(r"-?\d+\.?\d*", str(answer))
@@ -166,6 +177,15 @@ def prompt_preprocess(args, examples, tokenizer, n_shot_prompts, n_shot_prompts_
                 combined_texts.append(f"{n_shot_prompts}\nQ: {q}\nA: ")
 
     elif args.task == "svamp":
+        for i in range(len(examples)):
+            q = examples[i]["question_concat"]
+            a = examples[i]["answer"]
+            if hint[i] and args.no_hint == False:
+                combined_texts.append(f"{n_shot_prompts_hint}\nQ: {q} ({a})\nA: ")
+            else:
+                combined_texts.append(f"{n_shot_prompts}\nQ: {q}\nA: ")
+
+    elif args.task == "mate":
         for i in range(len(examples)):
             q = examples[i]["question_concat"]
             a = examples[i]["answer"]

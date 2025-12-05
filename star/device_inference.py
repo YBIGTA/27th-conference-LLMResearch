@@ -43,6 +43,9 @@ def write_new_data(args, target_save, pred, data, endoftext):
     elif args.task == "svamp":
         q = data["question_concat"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
+    elif args.task == "mate":
+        q = data["question_concat"]
+        new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "cladder":
         q = data["question"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
@@ -103,6 +106,14 @@ def test_metric_STaR(args, predictions, datas, target_save, tokenizer, hint):
                         pred_answer = matches[-1].group(1) if matches else None
                     
                     elif args.task == "svamp":
+                        matches = re.findall(r"-?\d+\.?\d*", pred)
+                        pred_answer = matches[-1] if matches else None
+                        ref_match = re.search(r"-?\d+\.?\d*", str(answer))
+                        ref_answer = ref_match.group(0) if ref_match else None
+                        if pred_answer == ref_answer:
+                            cur_correct = True
+                    
+                    elif args.task == "mate":
                         matches = re.findall(r"-?\d+\.?\d*", pred)
                         pred_answer = matches[-1] if matches else None
                         ref_match = re.search(r"-?\d+\.?\d*", str(answer))
@@ -317,6 +328,12 @@ def prompt_preprocess(args, examples, tokenizer, prompt, hint):
         else:
             combined_texts = [f"{prompt}\nQ: {q}\nA: " for q in examples["question_concat"]]
 
+    elif args.task == "mate":
+        if hint:
+            combined_texts = [f"{prompt}\nQ: {q} ({a})\nA: " for q, a in zip(examples["question_concat"], examples["answer"])]
+        else:
+            combined_texts = [f"{prompt}\nQ: {q}\nA: " for q in examples["question_concat"]]
+
     elif args.task == "cladder":
         if hint:
             combined_texts = [f"{prompt}\nQ: {q} ({a})\nA: " for q, a in zip(examples["question"], examples["answer"])]
@@ -433,6 +450,10 @@ def get_majority_vote(predictions_list, datas, args):
                         elif args.task == "cladder":
                             is_correct = final_answer.lower() == str(ref).lower()
                         elif args.task == "svamp":
+                            ref_match = re.search(r"-?\d+\.?\d*", str(ref))
+                            ref_answer = ref_match.group(0) if ref_match else None
+                            is_correct = final_answer.strip() == str(ref_answer).strip()
+                        elif args.task == "mate":
                             ref_match = re.search(r"-?\d+\.?\d*", str(ref))
                             ref_answer = ref_match.group(0) if ref_match else None
                             is_correct = final_answer.strip() == str(ref_answer).strip()

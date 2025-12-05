@@ -145,6 +145,26 @@ def build_problem_id_mapping(args, dataset_name, tokenizer=None):
                     "split": "test"
                 }
 
+        elif dataset_name == "mate":
+            train_data = load_dataset("json", data_files="./datasets/data_mate/val.jsonl")["train"]
+            test_data = load_dataset("json", data_files="./datasets/data_mate/test.jsonl")["train"]
+
+            for idx, example in enumerate(train_data):
+                question_id = str(example.get("idx", idx))
+                problem_mapping[question_id] = {
+                    "question": example.get("question_concat", ""),
+                    "answer": example.get("answer", ""),
+                    "split": "train"
+                }
+
+            for idx, example in enumerate(test_data):
+                question_id = str(example.get("idx", idx))
+                problem_mapping[question_id] = {
+                    "question": example.get("question_concat", ""),
+                    "answer": example.get("answer", ""),
+                    "split": "test"
+                }
+
         elif dataset_name == "STaR":
             if not hasattr(args, 'dataset_path'):
                 raise ValueError("dataset_path is required for STaR dataset")
@@ -680,6 +700,13 @@ def get_dataloader(args, tokenizer, rank, world_size):
         dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
+    elif args.task == "mate":
+        dataset_train = load_dataset("json", data_files="./datasets/data_mate/val.jsonl")["train"]
+        dataset_test = load_dataset("json", data_files="./datasets/data_mate/test.jsonl")["train"]
+
+        dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
+        dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
+
     dataset_train = dataset_train.map(
     add_idx_to_batch,
     with_indices=True,
@@ -758,6 +785,23 @@ def preprocess_function(args, examples, tokenizer, split):
         tokenized["answer"] = examples["answerKey"]
 
     elif args.task == "svamp":
+        if split == "train":
+            combined_texts = [f"Q: {q}\nA: {eq}\n#### {a}" for q, eq, a in zip(examples["question_concat"], examples["Equation"], examples["answer"])]
+        else:
+            combined_texts = [f"Q: {q}\nA: " for q in examples["question_concat"]]
+
+        tokenized = tokenizer(
+            combined_texts,
+            padding="max_length", 
+            truncation=True,
+            max_length=args.max_length, 
+        )
+
+        tokenized["question"] = examples["question_concat"]
+        tokenized["rationale"] = examples["Equation"]
+        tokenized["answer"] = examples["answer"]
+
+    elif args.task == "mate":
         if split == "train":
             combined_texts = [f"Q: {q}\nA: {eq}\n#### {a}" for q, eq, a in zip(examples["question_concat"], examples["Equation"], examples["answer"])]
         else:
