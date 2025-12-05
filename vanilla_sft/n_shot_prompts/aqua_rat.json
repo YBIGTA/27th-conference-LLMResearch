@@ -1,0 +1,37 @@
+{
+    "n_shot_prompts": [
+        {        
+            "prompt": "Q: Which is a longer period of time: 3 hours or 175 minutes?\nOptions:\nA). 1hours.\nB). 2hours.\nC). 3hours.\nD). 175 minutes.\nE)60minutes.\nA: convert 3 hours into minute\n60 minutes x3 hours = 180 minutes\n175 minutes. The answer is C.",
+            "prompt_num": 1
+        },
+        {
+            "prompt": "Q: One person has 2 children. At least one of them was a girl. Then the probability that 2 of the are girl is_____\nOptions:\nA). 1/2.\nB). 1/3.\nC). 1/4.\nD). 3/2\nE). 5/2\nA: total possibilities are 2 (G,B) (G,G)\nprobability that of both are girls = 1/2. The answer is A.",
+            "prompt_num": 2
+        },
+        {
+            "prompt": "Q: he function P~ can be expressed as 2-P for all values of P. What is the value of (7~)~?\nOptions:\nA). 7.\nB). 12.\nC). 14.\nD). 22.\nE). 26.\nA: (7~)~\n=(2-7)~\n= (-5)~\n=2-(-5)\n=7. The answer is A.",
+            "prompt_num": 3
+        },
+        {
+            "prompt": "Q: The binary representation of 0.6875 is ?\nOptions:\nA). 1010.\nB). 1011.\nC). 1001.\nD). 1000.\nE). 1111.\nA: Option (b), 0.6875*2=1.375--1\n0.375*2=0.75--0\n0.75*2=1.50--1\n0.50*2=1.0--1\n0.6875=.1011. The answer is B.",
+            "prompt_num": 4
+        },
+        {
+            "prompt": "Q: The length of each side of an equilateral triangle having an area of 4\u221a3 cm^2 is?\nOptions:\nA). 2.\nB). 6.\nC). 8.\nD). 9.\nE). 4.\nA: \u221a3/4a^2=4\u221a3\na=4. The answer is E.",
+            "prompt_num": 5
+        },
+        {
+            "prompt": "Q: The sum of odd numbers between 20 and 30 is\nOptions:\nA). 105.\nB). 120.\nC). 125.\nD). 140.\nE). 145.\nA: 21+23+25+27+29= 125. The answer is C.",
+            "prompt_num": 6
+        },
+        {
+            "prompt": "Q: If 0.497 mark has the value of one dollar, what is the value to the nearest dollar of 150 marks?\nOptions:\nA)$158\nB)$312\nC)$75\nD)$302\nE)$206\nA: 0.497==>1\n150==>?(say x)\nthen x = 150/0.497 appx = 302. The answer is D.",
+            "prompt_num": 7
+        },
+        {
+            "prompt": "Q: Peter piper picked a pack of pickled peppers according to the function Y=(1/X)*X^3-7. If X=3 how many pickled peppers did he pick?\nOptions:\nA).7\nB).24\nC).31\nD).2\nE).12\nA: Y=(1/3)*3^3-7=2. The answer is D",
+            "prompt_num": 8
+        }  
+        
+    ]
+}

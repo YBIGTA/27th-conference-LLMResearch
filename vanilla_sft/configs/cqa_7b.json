@@ -1,0 +1,33 @@
+{
+  "epochs": 8,
+  "grad_accumulation": 1,
+  "gen_length": 128,
+  "batch_size": 2,
+  "test_batch_size": 4,
+  "lr": 1e-05,
+  "weight_decay": 0.01,
+  "warm_up_ratio": 0.1,
+  "warm_up_steps": 100,
+  "ckpt_save": "checkpoints/",
+  "eval_save": "eval/",
+  "log_save": "log/",
+  "log_divisor": 100,
+  "save_divisor": 0,
+  "eval_divisor": 2,
+  "min_eval_epoch": 0,
+  "max_eval_epoch": 8,
+  "exp_name": "cqa_7B",
+  "task": "cqa",
+  "optimizer": "Adam",
+  "scheduler": "linear",
+  "precision": "bf16",
+  "model_name": "google/gemma-7b",
+  "max_length": 128,
+  "n_shot": 0,
+  "self_consistency": 5,
+  "lora":{
+    "lora_rank": 32,
+    "lora_alpha": 64,
+    "lora_dropout": 0.1
+  }
+}

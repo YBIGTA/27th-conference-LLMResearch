@@ -1,0 +1,36 @@
+{
+    "n_shot_prompts": [
+        {
+            "prompt": "Q: Chloe was playing a trivia game. In the first round, she scored 40 points, and in the second round, she scored 50 points. In the last round, she lost 4 points. She had _____ points at the end of the game.\nA: Chloe’s scores in the first two rounds are 40 and 50, which sum to 90. She then loses 4 points in the last round. Subtracting 4 from 90 leaves her with 86 points.\n#### 86",
+            "prompt_num": 1
+        },
+        {
+            "prompt": "Q: Justin needs 61 paper plates for a birthday party. He already has 26 blue plates and 7 red plates. Justin should buy _____ more plates .\nA: Justin has 26 blue plates + 7 red plates = 33 plates on hand. He needs 61 plates total. 61 - 33 = 28 plates to buy.\n#### 28",
+            "prompt_num": 2
+        },
+        {
+            "prompt": "Q: Mike had 34 peaches at his roadside fruit dish . He went to the orchard and picked peaches to stock up . There are now 86 peaches. He picked _____ number of peaches .\nA: Mike originally had 34 peaches. After picking more peaches, the total became 86. The number of peaches he picked is 86 − 34 = 52.\n#### 52",
+            "prompt_num": 3
+        },
+        {
+            "prompt": "Q: Ellen made smoothies in the blender . She used 0.2 cup of strawberries , 0.1 cup of yogurt , and 0.2 cup of orange juice. Ellen used _____ cups of ingredients for the smoothies .\nA: Ellen uses 0.2 cup strawberries + 0.1 cup yogurt + 0.2 cup orange juice. Summing these amounts: 0.2 + 0.1 + 0.2 = 0.5 cups total.\n#### 0.5",
+            "prompt_num": 4
+        },
+        {
+            "prompt": "Q: Shirley sold 20 boxes of Do-Si-Dos. Shirley needs to deliver _____ cases of 4 boxes, plus extra boxes .\nA: Shirley sold 20 boxes of Do-Si-Dos in total. A case holds 4 boxes. Dividing 20 by 4 gives 5 cases and a remainder of 0. So, Shirley needs to deliver 5 full cases (each of 4 boxes) and no extra boxes.\n#### 5",
+            "prompt_num": 5
+        },
+        {
+            "prompt": "Q: Jose starts with 7 bottle caps. He gets 2 more from Rebecca. Jose end up with _____ bottle caps .\nA: Jose starts with 7 bottle caps. He receives 2 more from Rebecca. Total is 7 + 2 = 9 bottle caps.\n#### 9",
+            "prompt_num": 6
+        },
+        {
+            "prompt": "Q: At the schools book fair Sam bought 13 adventure books and 17 mystery books. If 15 of the books were used , he bought _____ new books .\nA: Sam buys 13 adventure + 17 mystery = 30 total books. Out of these 30 books, 15 are used. The remaining 30 − 15 = 15 books must be new.\n#### 15",
+            "prompt_num": 7
+        },
+        {
+            "prompt": "Q: Diane is a beekeeper . Last year , she harvested 2479 pounds of honey . This year , she bought some new hives and increased her honey harvest by 6085 pounds. Diane harvested _____ pounds of honey this year .\nA: Diane harvested 2479 pounds of honey last year. She increased her harvest by 6085 pounds this year. Therefore, this year she harvested 2479 + 6085 = 8564 pounds of honey.\n#### 8564",
+            "prompt_num": 8
+        }
+   ]
+}
