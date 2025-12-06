@@ -803,20 +803,37 @@ def preprocess_function(args, examples, tokenizer, split):
 
     elif args.task == "mate":
         if split == "train":
-            combined_texts = [f"Q: {q}\nA: {eq}\n#### {a}" for q, eq, a in zip(examples["question_concat"], examples["Equation"], examples["answer"])]
-        else:
-            combined_texts = [f"Q: {q}\nA: " for q in examples["question_concat"]]
+            eos = tokenizer.eos_token or ""
+            instruct = examples["instruction"] 
+            questions = examples["question"]      # or "input" 등 실제 컬럼 이름에 맞춰 수정
+            # methods   = examples["Method"]        # 실제 컬럼 이름 확인
+            # tactics   = examples["Tactic"]        # 실제 컬럼 이름 확인
+            answers   = examples["answer"]        # 최종 수 (예: "b2b1")
 
+            combined_texts = [
+                f"Instruct: {i}\n"
+                f"Q: {q}\n"
+                # f"A: Method: {m}\n"
+                # f"Tactic: {t}\n"
+                f"#### {a}{eos}"
+                for i, q,  a in zip(instruct,questions, answers)
+            ] 
+        else:
+            combined_texts = [f"Instruct: {i}\n" f"Q: {q}\nA: " for i, q in zip(examples["instruction"] ,examples["question"])]
+
+    
         tokenized = tokenizer(
             combined_texts,
-            padding="max_length", 
-            truncation=True,
-            max_length=args.max_length, 
+            padding="max_length",  # Pad to max length
+            truncation=True,  # Truncate if exceeding max length
+            max_length=args.max_length,  # Adjust max length as needed
         )
-
-        tokenized["question"] = examples["question_concat"]
-        tokenized["rationale"] = examples["Equation"]
+        tokenized["instruct"] = examples["instruction"]
+        tokenized["question"] = examples["question"]
+        # tokenized["rationale"] = examples["Method"]
+        # tokenized["rationale"] = examples["Tactic"] 
         tokenized["answer"] = examples["answer"]
+        
 
     elif args.task == "anli_r1":
         combined_texts = []
