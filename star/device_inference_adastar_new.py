@@ -661,5 +661,3 @@ if __name__ == "__main__":
         args=(WORLD_SIZE, args),
         nprocs=WORLD_SIZE,
         join=True)
-
-
