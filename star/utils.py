@@ -701,9 +701,9 @@ def get_dataloader(args, tokenizer, rank, world_size):
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
     elif args.task == "mate":
-        dataset_train = load_dataset("json", data_files="./datasets/data_mate/val.jsonl")["train"]
+        dataset_train = load_dataset("json", data_files="./datasets/data_mate/train.jsonl")["train"]
         dataset_test = load_dataset("json", data_files="./datasets/data_mate/test.jsonl")["train"]
-
+        dataset_train = dataset_train.shuffle(seed=42).select(range(10000))
         dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
@@ -802,25 +802,34 @@ def preprocess_function(args, examples, tokenizer, split):
         tokenized["answer"] = examples["answer"]
 
     elif args.task == "mate":
+        # Safe extraction of variables first
+        instruct = examples.get("instruction", [""] * len(examples[list(examples.keys())[0]]))
+
+        if "question" in examples:
+            questions = examples["question"]
+        elif "input" in examples:
+            questions = examples["input"]
+        else:
+            questions = [""] * len(instruct)
+
+        if "answer" in examples:
+            answers = examples["answer"]
+        elif "output" in examples:
+            answers = examples["output"]
+        else:
+            answers = [""] * len(instruct)
+
         if split == "train":
             eos = tokenizer.eos_token or ""
-            instruct = examples["instruction"] 
-            questions = examples["question"]      # or "input" 등 실제 컬럼 이름에 맞춰 수정
-            # methods   = examples["Method"]        # 실제 컬럼 이름 확인
-            # tactics   = examples["Tactic"]        # 실제 컬럼 이름 확인
-            answers   = examples["answer"]        # 최종 수 (예: "b2b1")
-
             combined_texts = [
-                f"Instruct: {i}\n"
-                f"Q: {q}\n"
-                # f"A: Method: {m}\n"
-                # f"Tactic: {t}\n"
-                f"#### {a}{eos}"
-                for i, q,  a in zip(instruct,questions, answers)
-            ] 
+                f"Instruct: {i}\nQ: {q}\n#### {a}{eos}"
+                for i, q, a in zip(instruct, questions, answers)
+            ]
         else:
-            combined_texts = [f"Instruct: {i}\n" f"Q: {q}\nA: " for i, q in zip(examples["instruction"] ,examples["question"])]
-
+            combined_texts = [
+                f"Instruct: {i}\nQ: {q}\nA: "
+                for i, q in zip(instruct, questions)
+            ]
     
         tokenized = tokenizer(
             combined_texts,
@@ -828,11 +837,9 @@ def preprocess_function(args, examples, tokenizer, split):
             truncation=True,  # Truncate if exceeding max length
             max_length=args.max_length,  # Adjust max length as needed
         )
-        tokenized["instruct"] = examples["instruction"]
-        tokenized["question"] = examples["question"]
-        # tokenized["rationale"] = examples["Method"]
-        # tokenized["rationale"] = examples["Tactic"] 
-        tokenized["answer"] = examples["answer"]
+        tokenized["instruct"] = instruct
+        tokenized["question"] = questions
+        tokenized["answer"] = answers
         
 
     elif args.task == "anli_r1":
