@@ -48,7 +48,7 @@ def normalize_text(text):
 
 
 def get_files(input_path: Path) -> List[str]:
-    supported_file_types = ["jsonl.zst", "correct_data.txt", ".xz", ".tar.gz"]
+    supported_file_types = ["jsonl.zst", "correct_data.txt", ".xz", ".tar.gz",".jsonl"]
     if input_path.is_dir():
         files = [list(Path(input_path).glob(f"*{ft}")) for ft in supported_file_types]
         files = [f for sublist in files for f in sublist]

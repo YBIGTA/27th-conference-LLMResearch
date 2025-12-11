@@ -68,13 +68,25 @@ def gen_train():
 
 
 def gen_records():
-    gen_cmd = f'python3 create_finetune_tfrecords.py {record_folder(cur_iter - 1)} {record_folder(cur_iter - 1)}  --model_name={args.model_name} --seed={args.seed}'
+    # ▼▼▼ [수정됨] 1. 입력 경로 설정 로직 추가 ▼▼▼
+    if cur_iter == 1:
+        # 첫 번째 반복일 때는 우리가 만든 데이터 폴더를 입력으로 사용
+        input_path = "/mnt/data0/AdaSTaR/data/mate_no_explain"
+    else:
+        # 그 이후에는 이전 단계의 결과물을 입력으로 사용
+        input_path = record_folder(cur_iter - 1)
+    
+    # ▼▼▼ [수정됨] 2. 명령어 생성 (input_path 변수 적용) ▼▼▼
+    # create_finetune_tfrecords.py [입력경로] [출력이름] ... 순서입니다.
+    gen_cmd = f'python3 create_finetune_tfrecords.py {input_path} {record_folder(cur_iter - 1)}  --model_name={args.model_name} --seed={args.seed}'
+    
     gen_cmd += f' --max-length={args.max_length}'
     gen_cmd += f' --idx_save={record_folder(cur_iter - 1)}'
     gen_cmd += f' --split=train'
     gen_cmd += f' --exp_iter={cur_iter}'
 
     print(f"Creating records for finetuning {cur_iter}: {gen_cmd}")
+    
     if not args.dry_run and (cur_iter >= args.start_iter):
         if args.method in {"adastar_new_square", "adastar_new"}:
             os.system(gen_cmd)
@@ -83,6 +95,7 @@ def gen_records():
 
     if args.method in {"adastar_new_square", "adastar_new"}:
         with open(f"data/{train_set}", "w") as new_data_file:
+            # .pt 파일 경로는 출력 이름 기반으로 생성됨
             new_data_file.write(f"{record_folder(cur_iter - 1)}.pt")
     return
  
