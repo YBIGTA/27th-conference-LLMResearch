@@ -44,7 +44,7 @@ def write_new_data(args, target_save, pred, data, endoftext):
         q = data["question_concat"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "mate":
-        q = data["question_concat"]
+        q = data["question"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "cladder":
         q = data["question"]
@@ -330,7 +330,7 @@ def prompt_preprocess(args, examples, tokenizer, prompt, hint):
 
     elif args.task == "mate":
         if hint:
-            combined_texts = [f"{prompt}\nQ: {q} ({a})\nA: " for q, a in zip(examples["question_concat"], examples["answer"])]
+            combined_texts = [f"{prompt}\nQ: {q} ({a})\nA: " for q, a in zip(examples["question"], examples["answer"])]
         else:
             combined_texts = [f"{prompt}\nQ: {q}\nA: " for q in examples["question_concat"]]
 

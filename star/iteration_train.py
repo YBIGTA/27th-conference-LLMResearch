@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument("--steady_grow", action='store_true', help="Whether to use a fixed number of epochs")
     parser.add_argument("--add_steps", type=float, default=20., help="Steps to add each iteration")
 
-    parser.add_argument("--start_steps", type=float, default=40, help="Steps for the first iteration")
+    parser.add_argument("--start_steps", type=float, default=1, help="Steps for the first iteration")
     parser.add_argument("--exponential_grow", type=bool, default=True, help="Whether to use a fixed number of epochs")
     parser.add_argument("--grow_steps", type=float, default=1.2, help="Steps to add each iteration")
 
@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument('--rationalize', action="store_true", default=True, help="Whether to use rationalization")
 
     parser.add_argument("--start_iter", type=int, default=1, help="Starting iteration")
-    parser.add_argument("--n_iters", type=int, default=46, help="Upper limit on outer loop iterations")
+    parser.add_argument("--n_iters", type=int, default=5, help="Upper limit on outer loop iterations")
 
     parser.add_argument("--copy_n", type=int, default=0, help="Number of files to copy each iteration")
 
@@ -69,12 +69,12 @@ def gen_train():
 
 def gen_records():
     # ▼▼▼ [수정됨] 1. 입력 경로 설정 로직 추가 ▼▼▼
-    if cur_iter == 1:
-        # 첫 번째 반복일 때는 우리가 만든 데이터 폴더를 입력으로 사용
-        input_path = "/mnt/data0/AdaSTaR/data/mate_no_explain"
-    else:
-        # 그 이후에는 이전 단계의 결과물을 입력으로 사용
-        input_path = record_folder(cur_iter - 1)
+    # if cur_iter == 1:
+    #     # 첫 번째 반복일 때는 우리가 만든 데이터 폴더를 입력으로 사용
+    #     input_path = "/mnt/data0/AdaSTaR/data/mate_no_explain"
+    # else:
+    #     # 그 이후에는 이전 단계의 결과물을 입력으로 사용
+    input_path = record_folder(cur_iter - 1)
     
     # ▼▼▼ [수정됨] 2. 명령어 생성 (input_path 변수 적용) ▼▼▼
     # create_finetune_tfrecords.py [입력경로] [출력이름] ... 순서입니다.
