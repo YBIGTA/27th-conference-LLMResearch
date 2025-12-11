@@ -146,13 +146,13 @@ def build_problem_id_mapping(args, dataset_name, tokenizer=None):
                 }
 
         elif dataset_name == "mate":
-            train_data = load_dataset("json", data_files="./datasets/data_mate/val.jsonl")["train"]
-            test_data = load_dataset("json", data_files="./datasets/data_mate/test.jsonl")["train"]
+            train_data = load_dataset("json", data_files="./datasets/data_mate/train_stripped.jsonl")["train"]
+            test_data = load_dataset("json", data_files="./datasets/data_mate/test_stripped.jsonl")["train"]
 
             for idx, example in enumerate(train_data):
                 question_id = str(example.get("idx", idx))
                 problem_mapping[question_id] = {
-                    "question": example.get("question_concat", ""),
+                    "question": example.get("question", ""),
                     "answer": example.get("answer", ""),
                     "split": "train"
                 }
@@ -160,7 +160,7 @@ def build_problem_id_mapping(args, dataset_name, tokenizer=None):
             for idx, example in enumerate(test_data):
                 question_id = str(example.get("idx", idx))
                 problem_mapping[question_id] = {
-                    "question": example.get("question_concat", ""),
+                    "question": example.get("question", ""),
                     "answer": example.get("answer", ""),
                     "split": "test"
                 }
@@ -701,9 +701,8 @@ def get_dataloader(args, tokenizer, rank, world_size):
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
     elif args.task == "mate":
-        dataset_train = load_dataset("json", data_files="./datasets/data_mate/train.jsonl")["train"]
-        dataset_test = load_dataset("json", data_files="./datasets/data_mate/test.jsonl")["train"]
-        dataset_train = dataset_train.shuffle(seed=42).select(range(10000))
+        dataset_train = load_dataset("json", data_files="./datasets/data_mate/train_stripped.jsonl")["train"]
+        dataset_test = load_dataset("json", data_files="./datasets/data_mate/test_stripped.jsonl")["train"]
         dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
