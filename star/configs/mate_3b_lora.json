@@ -1,9 +1,9 @@
 {
   "epochs": 1,
   "grad_accumulation": 1,
-  "gen_length": 300,
-  "batch_size": 2,
-  "test_batch_size": 16,
+  "gen_length": 737,
+  "batch_size": 1,
+  "test_batch_size": 8,
   "lr": 1e-05,
   "weight_decay": 0.01,
   "warm_up_steps": 100,
@@ -15,13 +15,18 @@
   "scheduler": "linear",
   "precision": "bf16",
   "model_name": "meta-llama/Llama-3.2-3B",
-  "max_length": 603,
-  "n_shot": 8,
+  "max_length": 950,
+  "n_shot": 6,
   "self_consistency": 0,
   "delete_model_after_loading": true,
-  "accumulate": false,
-  "task": "cladder",
+  "accumulate": true,
+  "task": "mate",
+  "lora":{
+    "lora_rank": 32,
+    "lora_alpha": 64,
+    "lora_dropout": 0.1
+  },
   "inference_temp": 1.0,
-  "no_hint": false,
-  "base_model_path" : null
+  "no_hint": true,
+  "base_model_path": null
 }
