@@ -1,0 +1,28 @@
+{
+  "n_shot_prompts": [
+    {
+      "prompt_num": 1,
+      "prompt": "Q: The FEN of the given chess board is \"8/8/8/7R/8/1BP3kP/Pr6/6K1 b - - 0 36\". Which move is better?(b2b1)\nA: Method: Displace the piece to a more promising position, strengthening its board authority.Tactic: b2b1 b3d1 b1d1 Checkmate!\n#### b2b1"
+    },
+    {
+      "prompt_num": 2,
+      "prompt": "Q: The FEN of the given chess board is \"r2n1rk1/1bp1qpp1/p6p/1p2...N3/3PN1P1/2P1P2P/PPQ2P2/2KR3R b - - 2 18\". Which move is better?(f7f6)\nA: Method: By advancing a black pawn, additional space on the kingside is created, permitting more dynamic piece movement.Tactic: f7f6 f2f4 f6e5 Trade the lower value piece for a higher value piece.\n#### f7f6"
+    },
+    {
+      "prompt_num": 3,
+      "prompt": "Q: The FEN of the given chess board is \"8/7N/4p3/p7/3p3P/8/k3KPP1/8 b - - 0 42\". Which move is better?(a2b1)\nA: Method: Settle the piece in a more energetic spot, where it has better board supervision.Tactic: a2b1 h7g5 a5a4 g5e4 b1c2 e4c5\n#### a2b1"
+    },
+    {
+      "prompt_num": 4,
+      "prompt": "Q: The FEN of the given chess board is \"r4rk1/pp2bppp/2n1p3/q2pP3/3P4/2P2N2/PP2BPPP/R2Q1RK1 w - - 0 14\". Which move is better?(e5e6)\nA: Method: Move the piece to a more forceful square, improving its board supervision.Tactic: e5e6 f7e6 Trade the lower value piece for a higher value piece.\n#### e5e6"
+    },
+    {
+      "prompt_num": 5,
+      "prompt": "Q: The FEN of the given chess board is \"r3k2r/pb2bpBp/1p1np3/8/8/P2B4/1PPN1PPP/R4RK1 b kq - 0 15\". Which move is better?(h8g8)\nA: Method: Shift the piece to a proactive position, where it exerts more influence.Tactic: h8g8 g7d4 g8g2 g1h1 g2g4 d2e4\n#### h8g8"
+    },
+    {
+      "prompt_num": 6,
+      "prompt": "Q: The FEN of the given chess board is \"1r3rk1/pp1b1pp1/4p3/4q1N1/8/1Q5R/P4PPP/5RK1 w - - 0 21\". Which move is better?(h3h8)\nA: Method: Advance the piece to a strategic square, optimizing its control over the board.Tactic: h3h8 g8h8 Trade the lower value piece for a higher value piece.\n#### h3h8"
+    }
+  ]
+}

@@ -35,10 +35,10 @@ def write_new_data(args, pred, data, endoftext):
         q = data["question"]
         new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "svamp":
-        q = data.get("question_concat", data.get("question", ""))
+        q = data.get("question_concat", "question")
         new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "mate":
-        q = data.get("question_concat", data.get("question", ""))
+        q = data.get("question_concat", "question")
         new_example = f"Q: {q}\nA: {pred}" + endoftext
     elif args.task == "cladder":
         q = data["question"]
@@ -73,7 +73,7 @@ def test_metric_STaR(args, predictions, datas, tokenizer, rank):
 
     for idx, (pred, data) in enumerate(zip(predictions, datas), 1):
         cur_correct = False
-        answer = data.get("answer", "")
+        answer = data["answer"]
 
         q_start_idx = pred.find("Q: ")
         if q_start_idx != -1:
@@ -207,7 +207,7 @@ def prompt_preprocess(args, examples, tokenizer, n_shot_prompts, n_shot_prompts_
             else:
                 q = "" # Should probably handle error, but safe fallback
             
-            a = item.get("answer", "")
+            a = item["answer"]
             
             if hint[i] and args.no_hint == False:
                 combined_texts.append(f"{n_shot_prompts_hint}\nQ: {q} ({a})\nA: ")
@@ -582,9 +582,8 @@ def fsdp_main(rank, world_size, args, data_queue):
     with open(prompt_hint_file_path, "r") as f:
         data_hint = json.load(f) 
     
-    # [Fix] Use .get() to avoid KeyError if key is missing in hint file
-    n_shot_prompts = [item["prompt"] for item in data.get("n_shot_prompts", [])]
-    n_shot_prompts_hint = [item["prompt"] for item in data_hint.get("n_shot_prompts", [])]
+    n_shot_prompts = [item["prompt"] for item in data["n_shot_prompts"]]
+    n_shot_prompts_hint = [item["prompt"] for item in data_hint["n_shot_prompts"]]
     
     n_shot_prompts = "\n".join(n_shot_prompts)
     n_shot_prompts_hint = "\n".join(n_shot_prompts_hint)

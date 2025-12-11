@@ -803,31 +803,31 @@ def preprocess_function(args, examples, tokenizer, split):
 
     elif args.task == "mate":
         # Safe extraction of variables first
-        instruct = examples.get("instruction", [""] * len(examples[list(examples.keys())[0]]))
+        instruct = examples["instruction"]
 
         if "question" in examples:
             questions = examples["question"]
         elif "input" in examples:
             questions = examples["input"]
-        else:
-            questions = [""] * len(instruct)
+        # else:
+        #     questions = [""] * len(instruct)
 
         if "answer" in examples:
             answers = examples["answer"]
         elif "output" in examples:
             answers = examples["output"]
-        else:
-            answers = [""] * len(instruct)
+        # else:
+        #     answers = [""] * len(instruct)
 
         if split == "train":
             eos = tokenizer.eos_token or ""
             combined_texts = [
-                f"Instruct: {i}\nQ: {q}\n#### {a}{eos}"
+                f"Q:{i} {q}\n#### {a}{eos}"
                 for i, q, a in zip(instruct, questions, answers)
             ]
         else:
             combined_texts = [
-                f"Instruct: {i}\nQ: {q}\nA: "
+                f"Q:{i} {q}\nA: "
                 for i, q in zip(instruct, questions)
             ]
     
@@ -837,8 +837,7 @@ def preprocess_function(args, examples, tokenizer, split):
             truncation=True,  # Truncate if exceeding max length
             max_length=args.max_length,  # Adjust max length as needed
         )
-        tokenized["instruct"] = instruct
-        tokenized["question"] = questions
+        tokenized["question"] = [i + " " + q for i, q in zip(examples["instruction"], examples["question"])]
         tokenized["answer"] = answers
         
 
