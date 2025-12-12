@@ -86,7 +86,7 @@ def test_metric(args, predictions, answers):
             if pred_answer == ref:
                 correct += 1
 
-        elif args.task in ["asdiv", "svamp", "numglue", "gsm8k_svamp"]:
+        elif args.task in ["asdiv", "svamp", "numglue", "gsm8k_svamp","mate"]:
             matches = re.findall(r"-?\d+\.?\d*", pred)
             pred_answer = matches[-1] if matches else None
             ref_match = re.search(r"-?\d+\.?\d*", ref)
@@ -290,7 +290,7 @@ def test(args, model, rank, world_size, train_loader, test_loader, tokenizer, ge
                         elif args.task in ["arc_challenge", "cqa"]:
                             matches = list(re.finditer(r"\b(A|B|C|D|E)\b", pred))
                             pred_answer = matches[-1].group(1) if matches else "None"
-                        else:  # GSM8K, ASDIV, SVAMP
+                        else:  # GSM8K, ASDIV, SVAMP ,mate
                             matches = re.findall(r"-?\d+\.?\d*", pred)
                             pred_answer = matches[-1] if matches else "None"
                         f.write(f"Extracted Answer: {pred_answer}\n")
@@ -376,7 +376,7 @@ def test(args, model, rank, world_size, train_loader, test_loader, tokenizer, ge
                                 matches = list(re.finditer(r"\b(0|1|2)\b", pred))
                                 pred_answer = matches[0].group(1) if matches else "None"
 
-                            else:  # GSM8K, ASDIV, SVAMP
+                            else:  # GSM8K, ASDIV, SVAMP , mate
                                 matches = re.findall(r"-?\d+\.?\d*", pred)
                                 pred_answer = matches[-1] if matches else "None"
                             f.write(f"Extracted Answer: {pred_answer}\n")
@@ -438,7 +438,7 @@ def test(args, model, rank, world_size, train_loader, test_loader, tokenizer, ge
                                     matches = list(re.finditer(r"\b(0|1|2)\b", pred))
                                     pred_answer = matches[0].group(1) if matches else "None"
 
-                                else:  # GSM8K, ASDIV, SVAMP
+                                else:  # GSM8K, ASDIV, SVAMP, mate
                                     matches = re.findall(r"-?\d+\.?\d*", pred)
                                     pred_answer = matches[-1] if matches else "None"
                                 f.write(f"Extracted Answer: {pred_answer}\n")
@@ -582,7 +582,7 @@ def calculate_majority_votes(sc_predictions_list, args):
                 matches = list(re.finditer(r"\b(A|B|C|D|E)\b", pred))
                 pred_answer = matches[-1].group(1) if matches else None
 
-            else:  # GSM8K, ASDIV, SVAMP
+            else:  # GSM8K, ASDIV, SVAMP , MAte
                 matches = re.findall(r"-?\d+\.?\d*", pred)
                 pred_answer = matches[-1] if matches else None
 
@@ -632,7 +632,7 @@ def get_majority_vote(predictions_list, answers, args):
                 pred_answer = matches[-1].group(1) if matches else None
 
 
-            else:  ## GSM8K, ASDIV, SVAMP
+            else:  ## GSM8K, ASDIV, SVAMP ,mate
                 matches = re.findall(r"-?\d+\.?\d*", pred)
                 pred_answer = matches[-1] if matches else None
 
@@ -658,7 +658,7 @@ def get_majority_vote(predictions_list, answers, args):
             elif args.task == "anli_r1":
                 if final_answer and str(final_answer) == str(ref):
                     correct += 1
-            elif args.task in ["asdiv", "svamp", "numglue"]:
+            elif args.task in ["asdiv", "svamp", "numglue","mate"]:
                 ref_match = re.search(r"-?\d+\.?\d*", ref)
                 ref_answer = ref_match.group(0) if ref_match else None
                 if final_answer.strip() == str(ref_answer).strip():
