@@ -1,0 +1,96 @@
+# ========================================
+# Python
+# ========================================
+star/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# ========================================
+# Model Checkpoints (Large Files!)
+# ========================================
+star/checkpoints/
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# ========================================
+# Experiment Outputs (Generated during training)
+# ========================================
+# Task-specific result folders
+star/svamp/
+star/gsm8k/
+star/arc_challenge/
+star/cqa/
+star/anli_r1/
+star/cladder/
+star/mate/
+
+# Generated data indices
+star/data/
+
+# Experiment-specific configs (auto-generated)
+star/configs/
+# ========================================
+# Logs and Statistics
+# ========================================
+*.log
+*_log.json
+flops_log*.json
+training_indices_log.json
+final_indices_stats.json
+heap_stats.json
+winlose.json
+elapsed_time_log.json
+
+# ========================================
+# Temporary and Cache Files
+# ========================================
+*.pkl
+*.pickle
+.ipynb_checkpoints/
+*.swp
+*.swo
+*~
+
+# ========================================
+# VS Code / IDEs
+# ========================================
+.vscode/
+.idea/
+*.code-workspace
+
+# ========================================
+# OS Files
+# ========================================
+.DS_Store
+Thumbs.db
+
+# ========================================
+# Jupyter Notebooks (if you create any)
+# ========================================
+*.ipynb
+!example*.ipynb  # Keep example notebooks if any
+
+# ========================================
+# Datasets (Uncomment if datasets are large)
+# ========================================
+# datasets/*/data-*.arrow
+# datasets/*/*.jsonl
+
+# ========================================
+# Hugging Face Cache
+# ========================================
+.cache/
+wandb/
+
+# ========================================
+# Environment Files
+# ========================================
+.env
+.venv/
+venv/
+env/
+
