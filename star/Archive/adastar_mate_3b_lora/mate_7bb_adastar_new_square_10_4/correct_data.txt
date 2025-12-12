@@ -1,0 +1,20 @@
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "rnbqr1k1/5pp1/5n1p/2p5/p3NQ2/2BP1N1P/p1P2PP1/R5K1 w - - 0 21". Which move is better?
+A: 1.e3 or 1.e4
+#### e3<|end_of_text|>
+
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "4k1r1/p1qn1p1p/1b2pp2/8/QPp3b1/3P4/P3PPBP/2R1K1NR b K - 0 15". Which move is better?
+A: 1. h8h3 2. g8g7
+<|end_of_text|>
+
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "r5k1/ppp2p1p/3p1qp1/3Pr3/8/P1PP3Q/BP1K1P1P/6RR b - - 0 19". Which move is better?
+A: 1) Method: Attack an enemy piece with a pawn.
+Tactic: a4a3 b4b3 b2b4 b5b3 c1c2 b4c3 b3c4
+2) Method: Move the piece to a more authoritative position, where it can assert greater influence.
+Tactic: f6e6 b1c2 e6c4 b2c4 e2e4 Trade the lower value piece for a higher value piece.
+#### f6e6<|end_of_text|>
+
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "8/8/K2k4/2p5/1P6/8/8/8 w - - 0 51". Which move is better?
+A: 1. Bf4 or 2. d4?
+Method: Analyse the position of the board and determine the best plan of action.
+Tactic: Be aware of how each move will alter the board position and the position of each of your pieces, and choose the move that creates the most favourable position for your pieces.<|end_of_text|>
+

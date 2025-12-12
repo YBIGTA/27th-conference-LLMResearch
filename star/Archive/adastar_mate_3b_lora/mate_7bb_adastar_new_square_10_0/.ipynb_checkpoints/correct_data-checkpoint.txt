@@ -1,0 +1,9 @@
+Q: question
+A: 1. a2b1 2. g2h3
+#### g2h3<|end_of_text|>
+
+Q: question
+A: 1… a7b6 (Method: Shift the piece to a proactive position, improving its board supervision.)
+1… a7b6 is a stronger move, as it allows black to advance the f-pawn to gain more space.
+#### 1…a7b6<|end_of_text|>
+

@@ -1,0 +1,12 @@
+[
+  {
+    "iter": 1,
+    "step": 0,
+    "batch_indices": [
+      1010,
+      1010
+    ],
+    "total_unique_indices": 1,
+    "batch_size": 2
+  }
+]

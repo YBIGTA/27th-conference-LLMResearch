@@ -1,0 +1,8 @@
+[
+    {
+        "iter": 1,
+        "split": "train",
+        "accuracy": 0.11764705882352941,
+        "hint_accuracy": "_"
+    }
+]

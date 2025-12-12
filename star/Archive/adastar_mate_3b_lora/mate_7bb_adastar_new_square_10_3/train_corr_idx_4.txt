@@ -1,0 +1,9 @@
+idx: 1006
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "2r3k1/5pp1/pP1p4/3p1q2/P2P1P2/4PK1p/7P/1Q2R3 b - - 2 39". Which move is better?
+
+
+idx: 10
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "2r2k2/p4r2/2p5/1p2Q3/4p3/PP1P1b2/2K5/8 w - - 0 38". Which move is better?
+A: 7. Qf4. If 7... Qf5+ 8. Kg6! and White checks back Black's king, Qf5+ 9. Kg7 wins instantly!
+
+

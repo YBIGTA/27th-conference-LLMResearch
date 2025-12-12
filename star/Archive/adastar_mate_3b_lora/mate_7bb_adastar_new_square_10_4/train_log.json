@@ -1,0 +1,16 @@
+[
+  {
+    "iter": 5,
+    "step": 0,
+    "loss": 2.4030468463897705,
+    "learning_rate": 1.0000000000000001e-07,
+    "unique_indices": 2
+  },
+  {
+    "iter": 5,
+    "step": 1,
+    "loss": 2.257046937942505,
+    "learning_rate": 2.0000000000000002e-07,
+    "unique_indices": 4
+  }
+]

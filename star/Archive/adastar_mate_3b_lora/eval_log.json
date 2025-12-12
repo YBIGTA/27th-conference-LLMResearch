@@ -1,0 +1,62 @@
+[
+    {
+        "iter": 1,
+        "split": "train",
+        "accuracy": 0.11764705882352941,
+        "hint_accuracy": "_"
+    },
+    {
+        "iter": 1,
+        "split": "dev",
+        "accuracy": 0.0848,
+        "sc_accuracy": null
+    },
+    {
+        "iter": 2,
+        "split": "train",
+        "accuracy": 0.1875,
+        "hint_accuracy": "_"
+    },
+    {
+        "iter": 2,
+        "split": "dev",
+        "accuracy": 0.0912,
+        "sc_accuracy": null
+    },
+    {
+        "iter": 3,
+        "split": "train",
+        "accuracy": 0.125,
+        "hint_accuracy": "_"
+    },
+    {
+        "iter": 3,
+        "split": "dev",
+        "accuracy": 0.0966,
+        "sc_accuracy": null
+    },
+    {
+        "iter": 4,
+        "split": "train",
+        "accuracy": 0.29411764705882354,
+        "hint_accuracy": "_"
+    },
+    {
+        "iter": 4,
+        "split": "dev",
+        "accuracy": 0.0878,
+        "sc_accuracy": null
+    },
+    {
+        "iter": 5,
+        "split": "train",
+        "accuracy": 0.21052631578947367,
+        "hint_accuracy": "_"
+    },
+    {
+        "iter": 5,
+        "split": "dev",
+        "accuracy": 0.0988,
+        "sc_accuracy": null
+    }
+]

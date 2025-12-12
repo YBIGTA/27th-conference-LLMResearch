@@ -1,0 +1,15 @@
+{
+  "iter": 2,
+  "total_steps": 1,
+  "total_unique_indices_used": 2,
+  "unique_indices": [
+    101,
+    1010
+  ],
+  "indices_per_step": {
+    "0": [
+      101,
+      1010
+    ]
+  }
+}

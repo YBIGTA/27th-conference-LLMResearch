@@ -1,0 +1,157 @@
+[
+    {
+        "iter": 1,
+        "log_point": "gen_train_data",
+        "time": 68.678140625
+    },
+    {
+        "iter": 1,
+        "log_point": "tfrecord",
+        "time": 4.786951780319214
+    },
+    {
+        "iter": 2,
+        "log_point": "tfrecord",
+        "time": 5.024800539016724
+    },
+    {
+        "iter": 3,
+        "log_point": "tfrecord",
+        "time": 5.103710889816284
+    },
+    {
+        "iter": 4,
+        "log_point": "tfrecord",
+        "time": 4.863836288452148
+    },
+    {
+        "iter": 5,
+        "log_point": "tfrecord",
+        "time": 4.803249835968018
+    },
+    {
+        "iter": 1,
+        "log_point": "tfrecord",
+        "time": 6.127600431442261
+    },
+    {
+        "iter": 1,
+        "log_point": "train",
+        "time": 15.676263671875
+    },
+    {
+        "iter": 2,
+        "log_point": "tfrecord",
+        "time": 0.01713085174560547
+    },
+    {
+        "iter": 3,
+        "log_point": "tfrecord",
+        "time": 0.030584096908569336
+    },
+    {
+        "iter": 4,
+        "log_point": "tfrecord",
+        "time": 0.029262542724609375
+    },
+    {
+        "iter": 5,
+        "log_point": "tfrecord",
+        "time": 0.030187606811523438
+    },
+    {
+        "iter": 1,
+        "log_point": "tfrecord",
+        "time": 6.536376953125
+    },
+    {
+        "iter": 1,
+        "log_point": "train",
+        "time": 16.0045703125
+    },
+    {
+        "iter": 1,
+        "log_point": "test",
+        "time": 10731.998
+    },
+    {
+        "iter": 2,
+        "log_point": "gen_train_data",
+        "time": 34.24740625
+    },
+    {
+        "iter": 2,
+        "log_point": "tfrecord",
+        "time": 6.406018972396851
+    },
+    {
+        "iter": 2,
+        "log_point": "train",
+        "time": 14.63326953125
+    },
+    {
+        "iter": 2,
+        "log_point": "test",
+        "time": 10727.611
+    },
+    {
+        "iter": 3,
+        "log_point": "gen_train_data",
+        "time": 35.0734921875
+    },
+    {
+        "iter": 3,
+        "log_point": "tfrecord",
+        "time": 6.37404990196228
+    },
+    {
+        "iter": 3,
+        "log_point": "train",
+        "time": 15.2871865234375
+    },
+    {
+        "iter": 3,
+        "log_point": "test",
+        "time": 10723.174
+    },
+    {
+        "iter": 4,
+        "log_point": "gen_train_data",
+        "time": 68.5387578125
+    },
+    {
+        "iter": 4,
+        "log_point": "tfrecord",
+        "time": 6.150695085525513
+    },
+    {
+        "iter": 4,
+        "log_point": "train",
+        "time": 14.6460107421875
+    },
+    {
+        "iter": 4,
+        "log_point": "test",
+        "time": 10726.357
+    },
+    {
+        "iter": 5,
+        "log_point": "gen_train_data",
+        "time": 68.6740234375
+    },
+    {
+        "iter": 5,
+        "log_point": "tfrecord",
+        "time": 6.374716758728027
+    },
+    {
+        "iter": 5,
+        "log_point": "train",
+        "time": 18.395875
+    },
+    {
+        "iter": 5,
+        "log_point": "test",
+        "time": 10723.531
+    }
+]

@@ -1,0 +1,2845 @@
+[
+    {
+        "iter": 3,
+        "idx": 0,
+        "split": "inf",
+        "hint": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+        ],
+        "batch": 8,
+        "input": 13048,
+        "output": 5896
+    },
+    {
+        "iter": 3,
+        "idx": 0,
+        "split": "train",
+        "batch": 1,
+        "grad_accum": 1,
+        "context_len": 950
+    },
+    {
+        "iter": 3,
+        "idx": 0,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4161
+    },
+    {
+        "iter": 3,
+        "idx": 1,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1956
+    },
+    {
+        "iter": 3,
+        "idx": 2,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3185
+    },
+    {
+        "iter": 3,
+        "idx": 3,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4043
+    },
+    {
+        "iter": 3,
+        "idx": 4,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3863
+    },
+    {
+        "iter": 3,
+        "idx": 5,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3976
+    },
+    {
+        "iter": 3,
+        "idx": 6,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3051
+    },
+    {
+        "iter": 3,
+        "idx": 7,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2680
+    },
+    {
+        "iter": 3,
+        "idx": 8,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3924
+    },
+    {
+        "iter": 3,
+        "idx": 9,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3553
+    },
+    {
+        "iter": 3,
+        "idx": 10,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3794
+    },
+    {
+        "iter": 3,
+        "idx": 11,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3187
+    },
+    {
+        "iter": 3,
+        "idx": 12,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3860
+    },
+    {
+        "iter": 3,
+        "idx": 13,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3183
+    },
+    {
+        "iter": 3,
+        "idx": 14,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3420
+    },
+    {
+        "iter": 3,
+        "idx": 15,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3861
+    },
+    {
+        "iter": 3,
+        "idx": 16,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3825
+    },
+    {
+        "iter": 3,
+        "idx": 17,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4156
+    },
+    {
+        "iter": 3,
+        "idx": 18,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2988
+    },
+    {
+        "iter": 3,
+        "idx": 19,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5883
+    },
+    {
+        "iter": 3,
+        "idx": 20,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3852
+    },
+    {
+        "iter": 3,
+        "idx": 21,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3608
+    },
+    {
+        "iter": 3,
+        "idx": 22,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4155
+    },
+    {
+        "iter": 3,
+        "idx": 23,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2737
+    },
+    {
+        "iter": 3,
+        "idx": 24,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4123
+    },
+    {
+        "iter": 3,
+        "idx": 25,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3858
+    },
+    {
+        "iter": 3,
+        "idx": 26,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3219
+    },
+    {
+        "iter": 3,
+        "idx": 27,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4551
+    },
+    {
+        "iter": 3,
+        "idx": 28,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3975
+    },
+    {
+        "iter": 3,
+        "idx": 29,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3299
+    },
+    {
+        "iter": 3,
+        "idx": 30,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3894
+    },
+    {
+        "iter": 3,
+        "idx": 31,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4602
+    },
+    {
+        "iter": 3,
+        "idx": 32,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1771
+    },
+    {
+        "iter": 3,
+        "idx": 33,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2516
+    },
+    {
+        "iter": 3,
+        "idx": 34,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4219
+    },
+    {
+        "iter": 3,
+        "idx": 35,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2495
+    },
+    {
+        "iter": 3,
+        "idx": 36,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5394
+    },
+    {
+        "iter": 3,
+        "idx": 37,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2468
+    },
+    {
+        "iter": 3,
+        "idx": 38,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3399
+    },
+    {
+        "iter": 3,
+        "idx": 39,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3206
+    },
+    {
+        "iter": 3,
+        "idx": 40,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1965
+    },
+    {
+        "iter": 3,
+        "idx": 41,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4324
+    },
+    {
+        "iter": 3,
+        "idx": 42,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2572
+    },
+    {
+        "iter": 3,
+        "idx": 43,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4086
+    },
+    {
+        "iter": 3,
+        "idx": 44,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3614
+    },
+    {
+        "iter": 3,
+        "idx": 45,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4524
+    },
+    {
+        "iter": 3,
+        "idx": 46,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3801
+    },
+    {
+        "iter": 3,
+        "idx": 47,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3838
+    },
+    {
+        "iter": 3,
+        "idx": 48,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2810
+    },
+    {
+        "iter": 3,
+        "idx": 49,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4425
+    },
+    {
+        "iter": 3,
+        "idx": 50,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4228
+    },
+    {
+        "iter": 3,
+        "idx": 51,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5896
+    },
+    {
+        "iter": 3,
+        "idx": 52,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2532
+    },
+    {
+        "iter": 3,
+        "idx": 53,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3139
+    },
+    {
+        "iter": 3,
+        "idx": 54,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3692
+    },
+    {
+        "iter": 3,
+        "idx": 55,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3891
+    },
+    {
+        "iter": 3,
+        "idx": 56,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4363
+    },
+    {
+        "iter": 3,
+        "idx": 57,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4504
+    },
+    {
+        "iter": 3,
+        "idx": 58,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3948
+    },
+    {
+        "iter": 3,
+        "idx": 59,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4307
+    },
+    {
+        "iter": 3,
+        "idx": 60,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4259
+    },
+    {
+        "iter": 3,
+        "idx": 61,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4060
+    },
+    {
+        "iter": 3,
+        "idx": 62,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2122
+    },
+    {
+        "iter": 3,
+        "idx": 63,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5018
+    },
+    {
+        "iter": 3,
+        "idx": 64,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2463
+    },
+    {
+        "iter": 3,
+        "idx": 65,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2848
+    },
+    {
+        "iter": 3,
+        "idx": 66,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5006
+    },
+    {
+        "iter": 3,
+        "idx": 67,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3638
+    },
+    {
+        "iter": 3,
+        "idx": 68,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1301
+    },
+    {
+        "iter": 3,
+        "idx": 69,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3819
+    },
+    {
+        "iter": 3,
+        "idx": 70,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4754
+    },
+    {
+        "iter": 3,
+        "idx": 71,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3485
+    },
+    {
+        "iter": 3,
+        "idx": 72,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1954
+    },
+    {
+        "iter": 3,
+        "idx": 73,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3841
+    },
+    {
+        "iter": 3,
+        "idx": 74,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2564
+    },
+    {
+        "iter": 3,
+        "idx": 75,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4274
+    },
+    {
+        "iter": 3,
+        "idx": 76,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4514
+    },
+    {
+        "iter": 3,
+        "idx": 77,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5221
+    },
+    {
+        "iter": 3,
+        "idx": 78,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2545
+    },
+    {
+        "iter": 3,
+        "idx": 79,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3569
+    },
+    {
+        "iter": 3,
+        "idx": 80,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4404
+    },
+    {
+        "iter": 3,
+        "idx": 81,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3878
+    },
+    {
+        "iter": 3,
+        "idx": 82,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2529
+    },
+    {
+        "iter": 3,
+        "idx": 83,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5252
+    },
+    {
+        "iter": 3,
+        "idx": 84,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2585
+    },
+    {
+        "iter": 3,
+        "idx": 85,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2619
+    },
+    {
+        "iter": 3,
+        "idx": 86,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3971
+    },
+    {
+        "iter": 3,
+        "idx": 87,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4492
+    },
+    {
+        "iter": 3,
+        "idx": 88,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5002
+    },
+    {
+        "iter": 3,
+        "idx": 89,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3098
+    },
+    {
+        "iter": 3,
+        "idx": 90,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2185
+    },
+    {
+        "iter": 3,
+        "idx": 91,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2380
+    },
+    {
+        "iter": 3,
+        "idx": 92,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2637
+    },
+    {
+        "iter": 3,
+        "idx": 93,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4704
+    },
+    {
+        "iter": 3,
+        "idx": 94,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2185
+    },
+    {
+        "iter": 3,
+        "idx": 95,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4055
+    },
+    {
+        "iter": 3,
+        "idx": 96,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3937
+    },
+    {
+        "iter": 3,
+        "idx": 97,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3152
+    },
+    {
+        "iter": 3,
+        "idx": 98,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3199
+    },
+    {
+        "iter": 3,
+        "idx": 99,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4524
+    },
+    {
+        "iter": 3,
+        "idx": 100,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3918
+    },
+    {
+        "iter": 3,
+        "idx": 101,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3474
+    },
+    {
+        "iter": 3,
+        "idx": 102,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3171
+    },
+    {
+        "iter": 3,
+        "idx": 103,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3341
+    },
+    {
+        "iter": 3,
+        "idx": 104,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1426
+    },
+    {
+        "iter": 3,
+        "idx": 105,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3698
+    },
+    {
+        "iter": 3,
+        "idx": 106,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2315
+    },
+    {
+        "iter": 3,
+        "idx": 107,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3999
+    },
+    {
+        "iter": 3,
+        "idx": 108,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3155
+    },
+    {
+        "iter": 3,
+        "idx": 109,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3187
+    },
+    {
+        "iter": 3,
+        "idx": 110,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3222
+    },
+    {
+        "iter": 3,
+        "idx": 111,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4339
+    },
+    {
+        "iter": 3,
+        "idx": 112,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1868
+    },
+    {
+        "iter": 3,
+        "idx": 113,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4789
+    },
+    {
+        "iter": 3,
+        "idx": 114,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3587
+    },
+    {
+        "iter": 3,
+        "idx": 115,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4111
+    },
+    {
+        "iter": 3,
+        "idx": 116,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2699
+    },
+    {
+        "iter": 3,
+        "idx": 117,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4527
+    },
+    {
+        "iter": 3,
+        "idx": 118,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1156
+    },
+    {
+        "iter": 3,
+        "idx": 119,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3883
+    },
+    {
+        "iter": 3,
+        "idx": 120,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4924
+    },
+    {
+        "iter": 3,
+        "idx": 121,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3182
+    },
+    {
+        "iter": 3,
+        "idx": 122,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4157
+    },
+    {
+        "iter": 3,
+        "idx": 123,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4266
+    },
+    {
+        "iter": 3,
+        "idx": 124,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2315
+    },
+    {
+        "iter": 3,
+        "idx": 125,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4686
+    },
+    {
+        "iter": 3,
+        "idx": 126,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3993
+    },
+    {
+        "iter": 3,
+        "idx": 127,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3288
+    },
+    {
+        "iter": 3,
+        "idx": 128,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3868
+    },
+    {
+        "iter": 3,
+        "idx": 129,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5071
+    },
+    {
+        "iter": 3,
+        "idx": 130,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3222
+    },
+    {
+        "iter": 3,
+        "idx": 131,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2524
+    },
+    {
+        "iter": 3,
+        "idx": 132,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3950
+    },
+    {
+        "iter": 3,
+        "idx": 133,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3909
+    },
+    {
+        "iter": 3,
+        "idx": 134,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4193
+    },
+    {
+        "iter": 3,
+        "idx": 135,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3882
+    },
+    {
+        "iter": 3,
+        "idx": 136,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3862
+    },
+    {
+        "iter": 3,
+        "idx": 137,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4475
+    },
+    {
+        "iter": 3,
+        "idx": 138,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4694
+    },
+    {
+        "iter": 3,
+        "idx": 139,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2752
+    },
+    {
+        "iter": 3,
+        "idx": 140,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3149
+    },
+    {
+        "iter": 3,
+        "idx": 141,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4088
+    },
+    {
+        "iter": 3,
+        "idx": 142,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3904
+    },
+    {
+        "iter": 3,
+        "idx": 143,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3091
+    },
+    {
+        "iter": 3,
+        "idx": 144,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3260
+    },
+    {
+        "iter": 3,
+        "idx": 145,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4835
+    },
+    {
+        "iter": 3,
+        "idx": 146,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2249
+    },
+    {
+        "iter": 3,
+        "idx": 147,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2308
+    },
+    {
+        "iter": 3,
+        "idx": 148,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4086
+    },
+    {
+        "iter": 3,
+        "idx": 149,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5288
+    },
+    {
+        "iter": 3,
+        "idx": 150,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3819
+    },
+    {
+        "iter": 3,
+        "idx": 151,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3354
+    },
+    {
+        "iter": 3,
+        "idx": 152,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3132
+    },
+    {
+        "iter": 3,
+        "idx": 153,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3754
+    },
+    {
+        "iter": 3,
+        "idx": 154,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2465
+    },
+    {
+        "iter": 3,
+        "idx": 155,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3386
+    },
+    {
+        "iter": 3,
+        "idx": 156,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3161
+    },
+    {
+        "iter": 3,
+        "idx": 157,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3173
+    },
+    {
+        "iter": 3,
+        "idx": 158,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3483
+    },
+    {
+        "iter": 3,
+        "idx": 159,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5280
+    },
+    {
+        "iter": 3,
+        "idx": 160,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4024
+    },
+    {
+        "iter": 3,
+        "idx": 161,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2296
+    },
+    {
+        "iter": 3,
+        "idx": 162,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3034
+    },
+    {
+        "iter": 3,
+        "idx": 163,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3920
+    },
+    {
+        "iter": 3,
+        "idx": 164,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3200
+    },
+    {
+        "iter": 3,
+        "idx": 165,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3226
+    },
+    {
+        "iter": 3,
+        "idx": 166,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3636
+    },
+    {
+        "iter": 3,
+        "idx": 167,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2642
+    },
+    {
+        "iter": 3,
+        "idx": 168,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2419
+    },
+    {
+        "iter": 3,
+        "idx": 169,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1846
+    },
+    {
+        "iter": 3,
+        "idx": 170,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3240
+    },
+    {
+        "iter": 3,
+        "idx": 171,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2549
+    },
+    {
+        "iter": 3,
+        "idx": 172,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2755
+    },
+    {
+        "iter": 3,
+        "idx": 173,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3344
+    },
+    {
+        "iter": 3,
+        "idx": 174,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3942
+    },
+    {
+        "iter": 3,
+        "idx": 175,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2860
+    },
+    {
+        "iter": 3,
+        "idx": 176,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3719
+    },
+    {
+        "iter": 3,
+        "idx": 177,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5499
+    },
+    {
+        "iter": 3,
+        "idx": 178,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3829
+    },
+    {
+        "iter": 3,
+        "idx": 179,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2622
+    },
+    {
+        "iter": 3,
+        "idx": 180,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3503
+    },
+    {
+        "iter": 3,
+        "idx": 181,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3682
+    },
+    {
+        "iter": 3,
+        "idx": 182,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1852
+    },
+    {
+        "iter": 3,
+        "idx": 183,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3824
+    },
+    {
+        "iter": 3,
+        "idx": 184,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3165
+    },
+    {
+        "iter": 3,
+        "idx": 185,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2080
+    },
+    {
+        "iter": 3,
+        "idx": 186,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3903
+    },
+    {
+        "iter": 3,
+        "idx": 187,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3856
+    },
+    {
+        "iter": 3,
+        "idx": 188,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4621
+    },
+    {
+        "iter": 3,
+        "idx": 189,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3215
+    },
+    {
+        "iter": 3,
+        "idx": 190,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2479
+    },
+    {
+        "iter": 3,
+        "idx": 191,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2594
+    },
+    {
+        "iter": 3,
+        "idx": 192,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3933
+    },
+    {
+        "iter": 3,
+        "idx": 193,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3399
+    },
+    {
+        "iter": 3,
+        "idx": 194,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2614
+    },
+    {
+        "iter": 3,
+        "idx": 195,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3792
+    },
+    {
+        "iter": 3,
+        "idx": 196,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2552
+    },
+    {
+        "iter": 3,
+        "idx": 197,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5192
+    },
+    {
+        "iter": 3,
+        "idx": 198,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2952
+    },
+    {
+        "iter": 3,
+        "idx": 199,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3829
+    },
+    {
+        "iter": 3,
+        "idx": 200,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2879
+    },
+    {
+        "iter": 3,
+        "idx": 201,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4384
+    },
+    {
+        "iter": 3,
+        "idx": 202,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1912
+    },
+    {
+        "iter": 3,
+        "idx": 203,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2845
+    },
+    {
+        "iter": 3,
+        "idx": 204,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2684
+    },
+    {
+        "iter": 3,
+        "idx": 205,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3600
+    },
+    {
+        "iter": 3,
+        "idx": 206,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3559
+    },
+    {
+        "iter": 3,
+        "idx": 207,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3845
+    },
+    {
+        "iter": 3,
+        "idx": 208,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3184
+    },
+    {
+        "iter": 3,
+        "idx": 209,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5208
+    },
+    {
+        "iter": 3,
+        "idx": 210,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4155
+    },
+    {
+        "iter": 3,
+        "idx": 211,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3629
+    },
+    {
+        "iter": 3,
+        "idx": 212,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1786
+    },
+    {
+        "iter": 3,
+        "idx": 213,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4108
+    },
+    {
+        "iter": 3,
+        "idx": 214,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2444
+    },
+    {
+        "iter": 3,
+        "idx": 215,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2172
+    },
+    {
+        "iter": 3,
+        "idx": 216,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1218
+    },
+    {
+        "iter": 3,
+        "idx": 217,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3291
+    },
+    {
+        "iter": 3,
+        "idx": 218,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3150
+    },
+    {
+        "iter": 3,
+        "idx": 219,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4713
+    },
+    {
+        "iter": 3,
+        "idx": 220,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3286
+    },
+    {
+        "iter": 3,
+        "idx": 221,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2100
+    },
+    {
+        "iter": 3,
+        "idx": 222,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2916
+    },
+    {
+        "iter": 3,
+        "idx": 223,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3614
+    },
+    {
+        "iter": 3,
+        "idx": 224,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3613
+    },
+    {
+        "iter": 3,
+        "idx": 225,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2728
+    },
+    {
+        "iter": 3,
+        "idx": 226,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4005
+    },
+    {
+        "iter": 3,
+        "idx": 227,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4063
+    },
+    {
+        "iter": 3,
+        "idx": 228,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2864
+    },
+    {
+        "iter": 3,
+        "idx": 229,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4619
+    },
+    {
+        "iter": 3,
+        "idx": 230,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3238
+    },
+    {
+        "iter": 3,
+        "idx": 231,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3746
+    },
+    {
+        "iter": 3,
+        "idx": 232,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3223
+    },
+    {
+        "iter": 3,
+        "idx": 233,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3067
+    },
+    {
+        "iter": 3,
+        "idx": 234,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3834
+    },
+    {
+        "iter": 3,
+        "idx": 235,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2575
+    },
+    {
+        "iter": 3,
+        "idx": 236,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4534
+    },
+    {
+        "iter": 3,
+        "idx": 237,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4157
+    },
+    {
+        "iter": 3,
+        "idx": 238,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3328
+    },
+    {
+        "iter": 3,
+        "idx": 239,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4501
+    },
+    {
+        "iter": 3,
+        "idx": 240,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4680
+    },
+    {
+        "iter": 3,
+        "idx": 241,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4769
+    },
+    {
+        "iter": 3,
+        "idx": 242,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1007
+    },
+    {
+        "iter": 3,
+        "idx": 243,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3300
+    },
+    {
+        "iter": 3,
+        "idx": 244,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4308
+    },
+    {
+        "iter": 3,
+        "idx": 245,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3821
+    },
+    {
+        "iter": 3,
+        "idx": 246,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4550
+    },
+    {
+        "iter": 3,
+        "idx": 247,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2473
+    },
+    {
+        "iter": 3,
+        "idx": 248,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3542
+    },
+    {
+        "iter": 3,
+        "idx": 249,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2881
+    },
+    {
+        "iter": 3,
+        "idx": 250,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3464
+    },
+    {
+        "iter": 3,
+        "idx": 251,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3055
+    },
+    {
+        "iter": 3,
+        "idx": 252,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4050
+    },
+    {
+        "iter": 3,
+        "idx": 253,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4528
+    },
+    {
+        "iter": 3,
+        "idx": 254,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3641
+    },
+    {
+        "iter": 3,
+        "idx": 255,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3617
+    },
+    {
+        "iter": 3,
+        "idx": 256,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3230
+    },
+    {
+        "iter": 3,
+        "idx": 257,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4543
+    },
+    {
+        "iter": 3,
+        "idx": 258,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3079
+    },
+    {
+        "iter": 3,
+        "idx": 259,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4066
+    },
+    {
+        "iter": 3,
+        "idx": 260,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3164
+    },
+    {
+        "iter": 3,
+        "idx": 261,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2603
+    },
+    {
+        "iter": 3,
+        "idx": 262,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3803
+    },
+    {
+        "iter": 3,
+        "idx": 263,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4322
+    },
+    {
+        "iter": 3,
+        "idx": 264,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3142
+    },
+    {
+        "iter": 3,
+        "idx": 265,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3065
+    },
+    {
+        "iter": 3,
+        "idx": 266,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2478
+    },
+    {
+        "iter": 3,
+        "idx": 267,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3430
+    },
+    {
+        "iter": 3,
+        "idx": 268,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 1863
+    },
+    {
+        "iter": 3,
+        "idx": 269,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2797
+    },
+    {
+        "iter": 3,
+        "idx": 270,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2005
+    },
+    {
+        "iter": 3,
+        "idx": 271,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3230
+    },
+    {
+        "iter": 3,
+        "idx": 272,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3268
+    },
+    {
+        "iter": 3,
+        "idx": 273,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3188
+    },
+    {
+        "iter": 3,
+        "idx": 274,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2430
+    },
+    {
+        "iter": 3,
+        "idx": 275,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3850
+    },
+    {
+        "iter": 3,
+        "idx": 276,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2969
+    },
+    {
+        "iter": 3,
+        "idx": 277,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4628
+    },
+    {
+        "iter": 3,
+        "idx": 278,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3779
+    },
+    {
+        "iter": 3,
+        "idx": 279,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3117
+    },
+    {
+        "iter": 3,
+        "idx": 280,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4096
+    },
+    {
+        "iter": 3,
+        "idx": 281,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3015
+    },
+    {
+        "iter": 3,
+        "idx": 282,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4038
+    },
+    {
+        "iter": 3,
+        "idx": 283,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3202
+    },
+    {
+        "iter": 3,
+        "idx": 284,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3904
+    },
+    {
+        "iter": 3,
+        "idx": 285,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3966
+    },
+    {
+        "iter": 3,
+        "idx": 286,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3970
+    },
+    {
+        "iter": 3,
+        "idx": 287,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3218
+    },
+    {
+        "iter": 3,
+        "idx": 288,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4467
+    },
+    {
+        "iter": 3,
+        "idx": 289,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5223
+    },
+    {
+        "iter": 3,
+        "idx": 290,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2515
+    },
+    {
+        "iter": 3,
+        "idx": 291,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3656
+    },
+    {
+        "iter": 3,
+        "idx": 292,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2583
+    },
+    {
+        "iter": 3,
+        "idx": 293,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4149
+    },
+    {
+        "iter": 3,
+        "idx": 294,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3834
+    },
+    {
+        "iter": 3,
+        "idx": 295,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 907
+    },
+    {
+        "iter": 3,
+        "idx": 296,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 5205
+    },
+    {
+        "iter": 3,
+        "idx": 297,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3616
+    },
+    {
+        "iter": 3,
+        "idx": 298,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3933
+    },
+    {
+        "iter": 3,
+        "idx": 299,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2195
+    },
+    {
+        "iter": 3,
+        "idx": 300,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3789
+    },
+    {
+        "iter": 3,
+        "idx": 301,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3565
+    },
+    {
+        "iter": 3,
+        "idx": 302,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3137
+    },
+    {
+        "iter": 3,
+        "idx": 303,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4537
+    },
+    {
+        "iter": 3,
+        "idx": 304,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2990
+    },
+    {
+        "iter": 3,
+        "idx": 305,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3476
+    },
+    {
+        "iter": 3,
+        "idx": 306,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2822
+    },
+    {
+        "iter": 3,
+        "idx": 307,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3844
+    },
+    {
+        "iter": 3,
+        "idx": 308,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3976
+    },
+    {
+        "iter": 3,
+        "idx": 309,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 4630
+    },
+    {
+        "iter": 3,
+        "idx": 310,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 3274
+    },
+    {
+        "iter": 3,
+        "idx": 311,
+        "split": "dev",
+        "hint": "False",
+        "batch": 8,
+        "input": 13048,
+        "output": 2397
+    },
+    {
+        "iter": 3,
+        "idx": 312,
+        "split": "dev",
+        "hint": "False",
+        "batch": 4,
+        "input": 6524,
+        "output": 328
+    }
+]

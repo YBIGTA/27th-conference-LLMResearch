@@ -1,0 +1,90 @@
+[
+  {
+    "iter": 1,
+    "idx": 0,
+    "split": "inf",
+    "hint": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "batch": 8,
+    "input": 13048,
+    "output": 5896
+  },
+  {
+    "iter": 1,
+    "idx": 1,
+    "split": "inf",
+    "hint": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "batch": 8,
+    "input": 13048,
+    "output": 5896
+  },
+  {
+    "iter": 1,
+    "idx": 0,
+    "split": "train",
+    "batch": 1,
+    "grad_accum": 1,
+    "context_len": 950
+  },
+  {
+    "iter": 1,
+    "idx": 0,
+    "split": "inf",
+    "hint": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "batch": 8,
+    "input": 13048,
+    "output": 5177
+  },
+  {
+    "iter": 1,
+    "idx": 1,
+    "split": "inf",
+    "hint": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "batch": 8,
+    "input": 13048,
+    "output": 5896
+  },
+  {
+    "iter": 1,
+    "idx": 0,
+    "split": "train",
+    "batch": 1,
+    "grad_accum": 1,
+    "context_len": 950
+  }
+]

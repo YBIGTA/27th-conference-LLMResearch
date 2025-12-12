@@ -1,0 +1,8 @@
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "r2r1k2/1b2np2/p3pNp1/1p5p/3P4/PqP1QP2/6PP/R3R1K1 w - - 2 23". Which move is better?
+A: 2c2d4 2d4d3 Trade the lower value piece for a higher value piece.
+#### 2d4d3<|end_of_text|>
+
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "2r3k1/5pp1/pP1p4/3p1q2/P2P1P2/4PK1p/7P/1Q2R3 b - - 2 39". Which move is better?
+A: 5.Rc8 5.Rg8
+<|end_of_text|>
+

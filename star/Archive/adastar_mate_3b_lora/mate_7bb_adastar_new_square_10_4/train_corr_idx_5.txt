@@ -1,0 +1,16 @@
+idx: 1003
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "rnbqr1k1/5pp1/5n1p/2p5/p3NQ2/2BP1N1P/p1P2PP1/R5K1 w - - 0 21". Which move is better?
+
+
+idx: 1007
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "4k1r1/p1qn1p1p/1b2pp2/8/QPp3b1/3P4/P3PPBP/2R1K1NR b K - 0 15". Which move is better?
+
+
+idx: 1010
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "r5k1/ppp2p1p/3p1qp1/3Pr3/8/P1PP3Q/BP1K1P1P/6RR b - - 0 19". Which move is better?
+
+
+idx: 1011
+Q: You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. The FEN of the given chess board is "8/8/K2k4/2p5/1P6/8/8/8 w - - 0 51". Which move is better?
+
+
