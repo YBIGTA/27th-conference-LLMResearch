@@ -1,0 +1,17 @@
+{
+  "model_name": "Qwen/Qwen2.5-3B",
+  "engine_path": "stockfish",
+  "depth": 10,
+  "multipv": 4,
+  "time_ms": 0,
+  "iterations": 3,
+  "epochs": 1,
+  "include_rationale": false,
+  "beta": 0.1,
+  "lr": 5e-5,
+  "device": "cuda",
+  "cp_scale": 200.0,
+  "mate_train_path": "star/datasets/data_mate/train_stripped.jsonl",
+  "mate_test_path": "star/datasets/data_mate/test_stripped.jsonl",
+  "out_dir": "data/output/iterative_dpo_qwen3b"
+}
