@@ -150,10 +150,12 @@ def fsdp_main(rank, world_size, args):
             data = json.load(f)
         n_shot_prompts = [item["prompt"] for item in data["n_shot_prompts"]]
         selected_prompts = n_shot_prompts[:args.n_shot]
-        n_shot_input = "\n".join(selected_prompts)
-        tokenized_prompt = tokenizer(n_shot_input, return_tensors="pt")
+        prompt="""You are an expert chess player. You are given a chess board with FEN format. Your goal is to choose a better move given two candidate moves. 
+        few exmaples here \n"""
+        prompt += "\n".join(selected_prompts)
+        tokenized_prompt = tokenizer(prompt, return_tensors="pt")
         prompt_tokenized_len = tokenized_prompt["input_ids"].shape[1]
-        args.n_shot_input = n_shot_input
+        args.n_shot_input = prompt
         args.prompt_tokenized_len = prompt_tokenized_len
 
     init_start_event = torch.cuda.Event(enable_timing=True)
