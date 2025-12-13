@@ -167,6 +167,30 @@ gsm8k/gsm8k_adastar_new_square_10/eval_log.json
 ```
 These logs contain evaluation results, and are useful for comparing performance across different methods, datasets.
 
+## Engine-guided STaR for chess (proposed pipeline)
+
+The repository can also serve as a template for extending STaR/AdaSTaR to chess settings where a strong engine (e.g., Stockfish) is available as an oracle. The pipeline below turns large unlabeled position pools into rationale-rich supervision and then scales to full-game self-play.
+
+### Stage 1 – STaR(+AdaSTaR) for engine-aligned move prediction
+
+1. **Unlabeled pool**: Crawl tens of millions of positions from sources such as lichess or public FEN databases; only the `position` string is required.
+2. **Model sampling**: For each position, sample `k` trajectories from the current policy \(\pi_\theta\), each containing a reasoning trace and a proposed move.
+3. **Engine evaluation**: Use Stockfish to score the best move (`eval_best`) and the model move (`eval_model`), and compute `regret = eval_best - eval_model` (centipawns or win-probability delta).
+4. **Success selection**: Treat candidates with `regret` below a threshold (e.g., 20–30 cp) as successful STaR rationales; append their `(position, reasoning, move, eval, regret)` tuples to the training set with high weight.
+5. **Failure rationalization**: If no candidate clears the threshold, ask the model to explain Stockfish’s `best_move` (“why this move is strong tactically/strategically”) and store that rationale as auxiliary supervision.
+6. **Adaptive sampling (AdaSTaR)**: Maintain per-position win-rate/regret stats. Downsample trivial positions and prioritize borderline cases that the model often misses to form a curriculum.
+
+Iterating this loop steadily tunes \(\pi_\theta\) toward engine-consistent moves while keeping rationales grounded in verifiable quality.
+
+### Stage 2 – Self-play with post-mortem STaR
+
+1. **Game generation**: Run full games via self-play (both sides as \(\pi_\theta\)), vs. a weaker checkpoint, or vs. a small engine.
+2. **Stockfish review**: After the game, compute per-move `eval_before`/`eval_after` and derive a regret curve to identify inaccuracies, mistakes, and blunders.
+3. **Post-mortem rationales**: At each blunder point, query “what was the better plan here?” using the engine best line as the answer, or resample model moves and keep those with low regret; capture accompanying strategic/tactical explanations.
+4. **Quality-weighted updates**: Treat the analyzed trajectories as offline RL data (AWR/AWAC style), weighting moves by negative regret so the policy optimizes overall win rate and engine-aligned decisions.
+
+This two-stage recipe removes human labeling from the loop while steadily improving both move selection and explanatory quality through engine-verifiable feedback.
+
 ## Reference
 
 If you find this work helpful, please consider citing our paper:
@@ -179,3 +203,28 @@ If you find this work helpful, please consider citing our paper:
   url={https://openreview.net/forum?id=D6PwC6Xogv}
 }
 ```
+
+## Chess STaR Stage 1 (engine-guided)
+
+The `configs/stage1_star.yaml` file sets up the Qwen2.5-3B model with Stockfish evaluation, adaptive sampling, and
+generation/output paths pinned to `dataset/data_mate`.
+
+Run the STaR data generation loop:
+
+```
+python -m star.stage1_star_loop --config star/configs/stage1_star.yaml
+```
+
+Run baseline vs. STaR SFT fine-tuning:
+
+```
+# Baseline SFT without rationales
+python -m star.train_star_sft --config star/configs/stage1_star.yaml train.mode=baseline_sft
+
+# STaR-augmented SFT with success/fallback rationales
+python -m star.train_star_sft --config star/configs/stage1_star.yaml train.mode=star_sft
+```
+
+The generated STaR samples are written to `dataset/generated/star_stage1.jsonl` using the schema defined in
+`star/data/star_jsonl.py`. The Stockfish wrapper lives in `star/engine/stockfish_wrapper.py` and handles regret computation
+with mate-aware scoring.
