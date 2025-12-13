@@ -1,0 +1,51 @@
+model:
+  name_or_path: Qwen/Qwen2.5-3B-Instruct
+  torch_dtype: bfloat16
+  load_in_4bit: true
+  lora:
+    enable: true
+    r: 16
+    alpha: 32
+    dropout: 0.05
+
+data:
+  mate_root: dataset/data_mate
+  unlabeled_fen_path: null
+  output_star_jsonl: dataset/generated/star_stage1.jsonl
+
+engine:
+  path: /path/to/stockfish
+  depth: 18
+  multipv: 4
+  time_limit_ms: 0
+
+star:
+  k_samples: 8
+  regret_threshold_cp: 30
+  accept_max_per_position: 1
+  fallback_rationalize_on_fail: true
+  fallback_weight: 0.2
+  temperature: 0.8
+  top_p: 0.95
+  max_new_tokens: 128
+
+adastar:
+  enable: true
+  target_success_rate: 0.5
+  replay_size: 200000
+  min_visits: 2
+
+train:
+  mode: star_sft
+  batch_size: 4
+  grad_accum: 8
+  lr: 1.0e-4
+  max_steps: 20000
+  save_steps: 1000
+  eval_steps: 1000
+  max_length: 512
+  output_dir: outputs/star_sft
+  mix:
+    star_success_weight: 1.0
+    fallback_weight: 0.2
+    use_original_mate: true

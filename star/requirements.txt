@@ -14,3 +14,5 @@ uuid
 opencv-python-headless
 gdown
 flash-attn
+pyyaml
+python-chess
