@@ -1,21 +1,43 @@
 import argparse
+import json
 import math
 import os
 import random
+import re
 from typing import Any, Dict, List, Optional, Tuple
 
 import torch
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_scheduler
 
-from data.io import append_jsonl
-from data.schema import ContrastRationale, Delta, EngineConfig, EvalLine, Rationale, Sample
-from engine.stockfish_wrapper import StockfishEngine
-from rationale.verify import parse_rationale_text, verify_rationale
+from star.data.io import append_jsonl
+from star.data.schema import ContrastRationale, Delta, EngineConfig, EvalLine, Rationale, Sample
+from star.engine.stockfish_wrapper import StockfishEngine
+from star.rationale.verify import parse_rationale_text, verify_rationale
 
-DEFAULT_FENS = [
-    "r1bqkbnr/pppppppp/n7/8/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 1 2",
-]
+ROOT_DIR = os.path.dirname(__file__)
+DEFAULT_MATE_TRAIN = os.path.join(ROOT_DIR, "datasets", "data_mate", "train_stripped.jsonl")
+DEFAULT_MATE_TEST = os.path.join(ROOT_DIR, "datasets", "data_mate", "test_stripped.jsonl")
+DEFAULT_FENS = []
+
+
+def _extract_fen(question: str) -> Optional[str]:
+    match = re.search(r"board is \"([^\"]+)\"", question)
+    return match.group(1) if match else None
+
+
+def load_mate_fens(path: str) -> List[str]:
+    fens: List[str] = []
+    if not path or not os.path.exists(path):
+        return fens
+    with open(path, "r", encoding="utf-8") as fh:
+        for line in fh:
+            record = json.loads(line)
+            question = record.get("question", "")
+            fen = _extract_fen(question)
+            if fen:
+                fens.append(fen)
+    return fens
 
 
 class SFTDataset(Dataset):
@@ -80,6 +102,64 @@ def build_target_text(sample: Sample, include_rationale: bool) -> str:
             f"CONTRAST_PV: {contrast_pv}\n"
         )
     return f"MOVE: {sample.chosen}\n"
+
+
+def evaluate_model(
+    model,
+    tokenizer,
+    fens: List[str],
+    engine: StockfishEngine,
+    engine_cfg: EngineConfig,
+    include_rationale: bool,
+) -> Dict[str, Any]:
+    """Compute simple accuracy and cp gap against the engine best moves."""
+
+    if not fens:
+        return {"count": 0, "accuracy": 0.0, "avg_cp_gap": None}
+
+    model.eval()
+    correct = 0
+    total = 0
+    cp_gaps: List[int] = []
+    for fen in fens:
+        prompt = build_prompt(fen, include_rationale)
+        encoded = tokenizer(prompt, return_tensors="pt").to(model.device)
+        with torch.no_grad():
+            output = model.generate(
+                **encoded,
+                max_new_tokens=64 if include_rationale else 8,
+                do_sample=False,
+                num_return_sequences=1,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+        text = tokenizer.decode(output[0], skip_special_tokens=True)
+        parsed = parse_rationale_text(text)
+        move = parsed.get("move")
+        if not move:
+            continue
+
+        evals = engine.analyze(
+            fen,
+            multipv=engine_cfg.multipv,
+            depth=engine_cfg.depth,
+            time_ms=engine_cfg.time_ms,
+        )
+        if not evals:
+            continue
+
+        best_move = evals[0].get("move")
+        model_eval = next((ev for ev in evals if ev.get("move") == move), None)
+        best_cp = evals[0].get("cp")
+        model_cp = model_eval.get("cp") if model_eval else None
+        if best_cp is not None and model_cp is not None:
+            cp_gaps.append(best_cp - model_cp)
+
+        correct += int(move == best_move)
+        total += 1
+
+    accuracy = correct / total if total else 0.0
+    avg_cp_gap = sum(cp_gaps) / len(cp_gaps) if cp_gaps else None
+    return {"count": total, "accuracy": accuracy, "avg_cp_gap": avg_cp_gap}
 
 
 def generate_candidates(
@@ -192,7 +272,7 @@ def iterative_loop(args: argparse.Namespace) -> None:
     model = AutoModelForCausalLM.from_pretrained(args.model_name)
     model.to(args.device)
 
-    fens = args.fens or DEFAULT_FENS
+    fens = args.fens or load_mate_fens(args.mate_train_path) or DEFAULT_FENS
     engine = StockfishEngine(
         engine_path=args.engine_path,
         default_depth=args.depth,
@@ -218,15 +298,46 @@ def iterative_loop(args: argparse.Namespace) -> None:
             iteration_samples.append(sample)
         append_jsonl(os.path.join(args.out_dir, f"iter_{iteration}.jsonl"), [s.to_dict() for s in iteration_samples])
         train_sft(model, tokenizer, iteration_samples, args.include_rationale, lr=args.lr, epochs=1)
+
+        train_metrics = evaluate_model(
+            model,
+            tokenizer,
+            fens,
+            engine,
+            engine_cfg,
+            args.include_rationale,
+        )
+        eval_fens = args.eval_fens or load_mate_fens(args.mate_test_path)
+        test_metrics = (
+            evaluate_model(
+                model,
+                tokenizer,
+                eval_fens,
+                engine,
+                engine_cfg,
+                args.include_rationale,
+            )
+            if eval_fens
+            else None
+        )
+        metrics = {"iteration": iteration, "train": train_metrics, "test": test_metrics}
+        metrics_path = os.path.join(args.out_dir, f"metrics_iter_{iteration}.json")
+        with open(metrics_path, "w", encoding="utf-8") as f:
+            json.dump(metrics, f, ensure_ascii=False, indent=2)
+        print(f"[Iteration {iteration}] train metrics: {train_metrics}")
+        if test_metrics:
+            print(f"[Iteration {iteration}] test metrics: {test_metrics}")
+
         model.save_pretrained(os.path.join(args.out_dir, f"model_iter_{iteration}"))
         tokenizer.save_pretrained(os.path.join(args.out_dir, f"model_iter_{iteration}"))
 
     engine.close()
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Iterative SFT for verifier-only chess reasoning")
-    parser.add_argument("--model_name", type=str, default="sshleifer/tiny-gpt2")
+    parser.add_argument("--config", type=str, default=None, help="Path to JSON config with hyperparameters")
+    parser.add_argument("--model_name", type=str, default="Qwen/Qwen2.5-3B")
     parser.add_argument("--engine_path", type=str, default="stockfish")
     parser.add_argument("--depth", type=int, default=10)
     parser.add_argument("--multipv", type=int, default=4)
@@ -237,8 +348,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lr", type=float, default=5e-5)
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--out_dir", type=str, default="./data/output")
+    parser.add_argument("--eval_fens", nargs="*", help="Optional held-out FEN strings for evaluation")
     parser.add_argument("--fens", nargs="*", help="Optional list of FEN strings")
-    return parser.parse_args()
+    parser.add_argument(
+        "--mate_train_path",
+        type=str,
+        default=DEFAULT_MATE_TRAIN,
+        help="Path to data_mate training split for default FEN sampling",
+    )
+    parser.add_argument(
+        "--mate_test_path",
+        type=str,
+        default=DEFAULT_MATE_TEST,
+        help="Path to data_mate test split for default evaluation FENs",
+    )
+    known_args, _ = parser.parse_known_args(argv)
+    if known_args.config:
+        with open(known_args.config, "r", encoding="utf-8") as f:
+            config = json.load(f)
+        parser.set_defaults(**config)
+    return parser.parse_args(argv)
 
 
 def main() -> None:

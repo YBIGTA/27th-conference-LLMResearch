@@ -51,6 +51,35 @@ pip install -r requirements.txt
 python iteration_train.py --config=configs/example.json --method=adastar_new_square --seed=10
 ```
 
+### Verifier-only chess iterations (SFT / DPO)
+
+Two iterative chess training loops are available under `iterative_sft.py` and `iterative_dpo.py`. Both scripts log per-iteration metrics comparing train/test FEN agreement against the Stockfish oracle and save them to `data/output/metrics_iter_*.json`.
+
+```bash
+# Supervised fine-tuning with verifier-gated labels (defaults to Qwen2.5-3B and data_mate fens)
+python -m star.iterative_sft --model_name Qwen/Qwen2.5-3B \
+  --engine_path /usr/games/stockfish \
+  --mate_train_path star/datasets/data_mate/train_stripped.jsonl \
+  --mate_test_path star/datasets/data_mate/test_stripped.jsonl
+
+# Iterative DPO with engine-derived preference pairs
+python -m star.iterative_dpo --model_name Qwen/Qwen2.5-3B \
+  --engine_path /usr/games/stockfish \
+  --mate_train_path star/datasets/data_mate/train_stripped.jsonl \
+  --mate_test_path star/datasets/data_mate/test_stripped.jsonl
+
+# Config-driven runs mirroring other `star/configs/*.json` hyperparameter files
+python -m star.iterative_cli --mode sft_iter --config star/configs/iterative_sft_qwen3b.json
+python -m star.iterative_cli --mode dpo_iter --config star/configs/iterative_dpo_qwen3b.json
+```
+
+Arguments of note:
+
+- `--include_rationale`: train and evaluate on move + rationale format.
+- `--eval_fens`: held-out test FENs for iteration-by-iteration evaluation (defaults to `data_mate` test split).
+- `--fens`: override FENs instead of using `data_mate` training split.
+- `--out_dir`: output directory for JSONL samples, checkpoints, and metric logs.
+
 ### AdaSTaR - Stochastic Version
 ```bash
 python iteration_train.py --config=configs/example.json --method=adastar_new --seed=10

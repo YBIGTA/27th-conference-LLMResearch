@@ -1,7 +1,7 @@
 import argparse
 
-from iterative_dpo import iterative_dpo, parse_args as parse_dpo_args
-from iterative_sft import iterative_loop, parse_args as parse_sft_args
+from star.iterative_dpo import iterative_dpo, parse_args as parse_dpo_args
+from star.iterative_sft import iterative_loop, parse_args as parse_sft_args
 
 
 def main() -> None:
@@ -10,10 +10,10 @@ def main() -> None:
     args, unknown = parser.parse_known_args()
 
     if args.mode == "sft_iter":
-        sft_args = parse_sft_args()
+        sft_args = parse_sft_args(unknown)
         iterative_loop(sft_args)
     elif args.mode == "dpo_iter":
-        dpo_args = parse_dpo_args()
+        dpo_args = parse_dpo_args(unknown)
         iterative_dpo(dpo_args)
     else:
         raise NotImplementedError("RLVR mode is not implemented in this reference implementation.")
