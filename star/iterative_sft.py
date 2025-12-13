@@ -170,9 +170,11 @@ def generate_candidates(
     include_rationale: bool,
 ) -> List[Dict[str, Any]]:
     prompt = build_prompt(fen, include_rationale)
-    encoded = tokenizer(prompt, return_tensors="pt")
+
+    encoded = tokenizer(prompt, return_tensors="pt").to(model.device)
+
     outputs = model.generate(
-        **{k: v for k, v in encoded.items()},
+        **encoded,
         max_new_tokens=64 if include_rationale else 8,
         do_sample=True,
         top_k=20,
@@ -187,6 +189,7 @@ def generate_candidates(
         rationale = parsed
         candidates.append({"move": move, "rationale": rationale, "raw": text})
     return candidates
+
 
 
 def pick_best_eval(evals: List[EvalLine]) -> Optional[EvalLine]:

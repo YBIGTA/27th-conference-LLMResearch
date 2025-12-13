@@ -1,6 +1,6 @@
 {
   "model_name": "Qwen/Qwen2.5-3B",
-  "engine_path": "stockfish",
+  "engine_path": "/usr/games/stockfish",
   "depth": 10,
   "multipv": 4,
   "time_ms": 0,

@@ -44,35 +44,41 @@ class StockfishEngine:
         depth: Optional[int] = None,
         time_ms: Optional[int] = None,
     ) -> List[Dict[str, Any]]:
-        """
-        Run an engine analysis and return parsed multipv lines.
-
-        Args:
-            fen: Board state.
-            moves: Optional list of root moves (UCI) to constrain search.
-            multipv: Number of principal variations to request.
-            depth: Search depth.
-            time_ms: Search time in milliseconds.
-        """
+    
         multipv = multipv or self.default_multipv
         depth = depth or self.default_depth
         time_ms = time_ms if time_ms is not None else self.default_time_ms
-
+    
         board = chess.Board(fen)
+    
         root_moves = None
         if moves:
-            try:
-                root_moves = [chess.Move.from_uci(move) for move in moves]
-            except ValueError as exc:
-                raise ValueError(f"Invalid move in forced list: {moves}") from exc
-
-        limits = chess.engine.Limit(depth=depth, time=time_ms / 1000 if time_ms else None)
-
+            root_moves = []
+            for move in moves:
+                try:
+                    root_moves.append(chess.Move.from_uci(move))
+                except ValueError:
+                    continue
+            if not root_moves:
+                root_moves = None
+    
+        limits = chess.engine.Limit(
+            depth=depth,
+            time=(time_ms / 1000.0) if time_ms else None,
+        )
+    
         with self._ensure_engine() as engine:
-            engine.configure({"MultiPV": multipv})
-            info_list = engine.analyse(board, limits=limits, multipv=multipv, root_moves=root_moves)
-
-        return [self._parse_info(info, board) for info in info_list]
+            infos = engine.analyse(
+                board,
+                limit=limits,
+                multipv=multipv,
+                root_moves=root_moves,
+            )
+    
+        if isinstance(infos, dict):
+            infos = [infos]
+    
+        return [self._parse_info(info, board) for info in infos]
 
     def refutation_pv(
         self,
@@ -92,7 +98,7 @@ class StockfishEngine:
 
         limits = chess.engine.Limit(depth=depth, time=time_ms / 1000 if time_ms else None)
         with self._ensure_engine() as engine:
-            info = engine.analyse(board, limits=limits)
+            info = engine.analyse(board, limit=limits)
 
         pv = [uci for uci in self._extract_pv(info, board)]
         return pv[:3]
