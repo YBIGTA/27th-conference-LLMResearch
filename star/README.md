@@ -56,6 +56,12 @@ python iteration_train.py --config=configs/example.json --method=adastar_new_squ
 Two iterative chess training loops are available under `iterative_sft.py` and `iterative_dpo.py`. Both scripts log per-iteration metrics comparing train/test FEN agreement against the Stockfish oracle and save them to `data/output/metrics_iter_*.json`.
 
 ```bash
+
+#install stockfish
+apt update
+apt install stockfish
+ls /usr/games/stockfish
+
 # Supervised fine-tuning with verifier-gated labels (defaults to Qwen2.5-3B and data_mate fens)
 python -m star.iterative_sft --model_name Qwen/Qwen2.5-3B \
   --engine_path /usr/games/stockfish \
