@@ -133,11 +133,47 @@ def test_metric(args, predictions, answers):
 
 
 def get_DDP_copy_model(args, model, rank):
-    cfg = FullStateDictConfig(offload_to_cpu=True, rank0_only=False)
-    # Get FULL state dict
+    import tempfile
+    import os
+    
+    cfg = FullStateDictConfig(offload_to_cpu=True, rank0_only=True)
+    # Get FULL state dict - ensure model is synchronized across all ranks
     dist.barrier()
+    # Ensure all ranks have completed their training step before getting state dict
     with FSDP.state_dict_type(model, StateDictType.FULL_STATE_DICT, cfg):
         full_state_dict = model.state_dict()
+    dist.barrier()
+
+    # Save state dict to temporary file on rank 0, then all ranks load it
+    temp_file = None
+    if rank == 0:
+        # Create temporary file
+        temp_fd, temp_file = tempfile.mkstemp(suffix='.pt', prefix='fsdp_state_dict_')
+        os.close(temp_fd)
+        torch.save(full_state_dict, temp_file)
+        if rank == 0:
+            print(f"Saved state dict to temporary file: {temp_file}")
+    
+    # Broadcast the file path to all ranks
+    if rank == 0:
+        file_path_list = [temp_file]
+    else:
+        file_path_list = [None]
+    dist.broadcast_object_list(file_path_list, src=0)
+    temp_file = file_path_list[0]
+    
+    dist.barrier()  # Ensure file is written before other ranks try to read
+    
+    # All ranks load the state dict from file
+    full_state_dict = torch.load(temp_file, map_location=f'cuda:{rank}')
+    
+    # Clean up temporary file
+    if rank == 0:
+        try:
+            os.remove(temp_file)
+        except:
+            pass
+    
     dist.barrier()
 
     if args.model_name == "Qwen/Qwen2.5-3B":
@@ -145,7 +181,16 @@ def get_DDP_copy_model(args, model, rank):
     else:
         test_model = AutoModelForCausalLM.from_pretrained(args.model_name, torch_dtype=torch.bfloat16)
 
-    test_model.load_state_dict(full_state_dict)  # Load FULL state dict
+    # Load state dict and check for any issues
+    missing_keys, unexpected_keys = test_model.load_state_dict(full_state_dict, strict=False)
+    if rank == 0:
+        if missing_keys:
+            print(f"Warning: {len(missing_keys)} missing keys when loading state dict (showing first 5): {list(missing_keys)[:5]}")
+        if unexpected_keys:
+            print(f"Warning: {len(unexpected_keys)} unexpected keys when loading state dict (showing first 5): {list(unexpected_keys)[:5]}")
+        if not missing_keys and not unexpected_keys:
+            print("State dict loaded successfully with all keys matching.")
+    
     test_model = test_model.to(rank)
     test_model = DDP(test_model, device_ids=[rank], output_device=rank)  # Wrap with DDP
 
