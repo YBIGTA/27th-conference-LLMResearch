@@ -128,6 +128,7 @@ def get_n_steps():
 
 
 # prev_config 복사해서 이번 iter에 맞게 config 업데이트하고 저장
+# configs/svamp_qwen_adastar_new_square_10/svamp_qwen_adastar_new_square_10_23.json 이런식의 경로 반환
 def gen_config():
     print(f"Creating new config file {cur_iter}")
     config_name = f'configs/{experiment_name}/{exp_iteration}.json'
