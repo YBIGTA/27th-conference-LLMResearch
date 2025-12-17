@@ -394,58 +394,111 @@ def fsdp_wrap(args, model, rank, cpu_offload=False):
         )
     return model
 
+def _load_base_model(model_name_or_dir: str, dtype, trust_remote_code: bool = True):
+    # Qwen이면 trust_remote_code가 필요할 수 있어 유지
+    return AutoModelForCausalLM.from_pretrained(
+        model_name_or_dir,
+        trust_remote_code=trust_remote_code,
+        torch_dtype=dtype,
+        attn_implementation="sdpa",  # flash_attn 없으면 sdpa가 안전
+    )
+
 
 def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=False, eval=False):
-    if args.precision == "bf16":
-        model_dtype = torch.bfloat16
+    model_dtype = torch.bfloat16 if args.precision == "bf16" else torch.float16  # 필요시 확장
 
-    if model_name == "Qwen/Qwen2.5-3B" :
-        model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True,    attn_implementation="flash_attention_2",torch_dtype=torch.bfloat16)
-    else :
-        model = AutoModelForCausalLM.from_pretrained(model_name,torch_dtype=torch.bfloat16)
+    # 1) tokenizer source 결정: model_path가 디렉토리면 거기, 아니면 model_name
+    tok_source = model_path if (model_path is not None and os.path.isdir(model_path)) else model_name
+
+    # 2) base model 로드 source 결정
+    #    - model_path가 HF 디렉토리면 거기서 base 모델을 로드 (가장 자연스러움)
+    #    - 아니면 model_name에서 base 모델 로드 후, model_path 파일(state_dict/LoRA) 적용
+    base_source = model_path if (model_path is not None and os.path.isdir(model_path)) else model_name
+
+    # 3) base model load
+    trust_remote = True  # Qwen 포함해서 대체로 안전
+    model = _load_base_model(base_source, dtype=model_dtype, trust_remote_code=trust_remote)
+
+    # 4) (선택) LoRA 아닌 경우: model_path가 "파일"이면 state_dict/모델 객체 로드
     if not args.lora:
-        state_dict = torch.load(model_path, map_location="cpu")
-        model.load_state_dict(state_dict)
+        if model_path is not None and os.path.isfile(model_path):
+            obj = torch.load(model_path, map_location="cpu")
+
+            # (a) state_dict(dict) 직접 저장
+            if isinstance(obj, dict) and any(k.startswith(("model.", "transformer.", "lm_head.", "module.")) for k in obj.keys()):
+                state_dict = obj
+
+            # (b) {"state_dict": ...} 형태
+            elif isinstance(obj, dict) and "state_dict" in obj and isinstance(obj["state_dict"], dict):
+                state_dict = obj["state_dict"]
+
+            # (c) 모델 객체(torch.save(model))로 저장된 pickle
+            elif isinstance(obj, torch.nn.Module):
+                model = obj.to(model_dtype)
+                state_dict = None
+
+            else:
+                raise ValueError(f"Unrecognized checkpoint format at {model_path}. type={type(obj)} keys={list(obj.keys())[:5] if isinstance(obj, dict) else None}")
+
+            if state_dict is not None:
+                missing, unexpected = model.load_state_dict(state_dict, strict=False)
+                # strict=False 권장: head mismatch나 key prefix 차이를 흡수
+                # 필요하면 여기서 로그 출력 가능
+
+        elif model_path is not None and os.path.isdir(model_path):
+            # HF dir에서 이미 from_pretrained로 로드했으니 추가 작업 없음
+            pass
+        elif model_path is not None:
+            raise FileNotFoundError(f"model_path not found: {model_path}")
+
+        # 분산 래핑
         if eval:
             model = model.to(rank)
             model = DDP(model, device_ids=[rank], find_unused_parameters=True)
         else:
             model = fsdp_wrap(args, model, rank, cpu_offload=cpu_offload)
 
-    if args.lora:
+    # 5) LoRA인 경우: base model에 LoRA adapter state 적용
+    else:
         from peft import LoraConfig, TaskType, get_peft_model
+
         peft_config = LoraConfig(
-            task_type=TaskType.CAUSAL_LM, inference_mode=False,
+            task_type=TaskType.CAUSAL_LM,
+            inference_mode=False,
             r=args.lora["lora_rank"],
             lora_alpha=args.lora["lora_alpha"],
             lora_dropout=args.lora["lora_dropout"],
         )
-        model = get_peft_model(model, peft_config)
-        model = model.to(model_dtype)
+        model = get_peft_model(model, peft_config).to(model_dtype)
+
         if eval:
             model = model.to(rank)
             model = DDP(model, device_ids=[rank], find_unused_parameters=True)
         else:
             model = fsdp_wrap(args, model, rank)
 
-        lora_state_dict = torch.load(model_path, map_location="cpu")
-        model_state_dict = model.state_dict()
-        updated_lora_state_dict = {}
-        for key in lora_state_dict.keys():
-            new_key = "module." + key if "module." + key in model_state_dict else key
-            updated_lora_state_dict[new_key] = lora_state_dict[key]
+        # LoRA ckpt는 파일이어야 함
+        if model_path is None or not os.path.isfile(model_path):
+            raise FileNotFoundError(f"LoRA checkpoint file not found: {model_path}")
 
-        model.load_state_dict(updated_lora_state_dict, strict=False) 
+        lora_obj = torch.load(model_path, map_location="cpu")
+        # lora_obj가 dict가 아닌 경우는 보통 잘못 저장된 것
+        if not isinstance(lora_obj, dict):
+            raise ValueError(f"LoRA checkpoint must be a dict state_dict. got {type(lora_obj)}")
+
+        model_state_dict = model.state_dict()
+        updated = {}
+        for k, v in lora_obj.items():
+            new_k = "module." + k if ("module." + k) in model_state_dict else k
+            updated[new_k] = v
+        model.load_state_dict(updated, strict=False)
         dist.barrier()
 
         if rank == 0:
-            if isinstance(model, torch.nn.parallel.DistributedDataParallel):
-                model.module.print_trainable_parameters()
-            else:
-                model.print_trainable_parameters()
+            (model.module if isinstance(model, DDP) else model).print_trainable_parameters()
 
-    model = model.to(rank)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    # 6) tokenizer 설정
+    tokenizer = AutoTokenizer.from_pretrained(tok_source, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
@@ -703,6 +756,7 @@ def get_dataloader(args, tokenizer, rank, world_size):
     elif args.task == "mate":
         dataset_train = load_dataset("json", data_files="./datasets/data_mate/train_stripped.jsonl")["train"]
         dataset_test = load_dataset("json", data_files="./datasets/data_mate/test_stripped.jsonl")["train"]
+        
         dataset_train = dataset_train.map(lambda examples: preprocess_function(args, examples, tokenizer, "train"), batched=True)
         dataset_test = dataset_test.map(lambda examples: preprocess_function(args, examples, tokenizer, "test"), batched=True)
 
