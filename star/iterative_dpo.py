@@ -9,10 +9,10 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_scheduler
 
-from star.data.io import append_jsonl
-from star.data.schema import EngineConfig
-from star.engine.stockfish_wrapper import StockfishEngine
-from star.rationale.verify import parse_rationale_text, verify_rationale
+from data.io import append_jsonl
+from data.schema import EngineConfig
+from engine.stockfish_wrapper import StockfishEngine
+from rationale.verify import parse_rationale_text, verify_rationale
 
 ROOT_DIR = os.path.dirname(__file__)
 DEFAULT_MATE_TRAIN = os.path.join(ROOT_DIR, "datasets", "data_mate", "train_stripped.jsonl")

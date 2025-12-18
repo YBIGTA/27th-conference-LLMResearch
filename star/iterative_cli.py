@@ -1,7 +1,7 @@
 import argparse
 
-from star.iterative_dpo import iterative_dpo, parse_args as parse_dpo_args
-from star.iterative_sft import iterative_loop, parse_args as parse_sft_args
+from iterative_dpo import iterative_dpo, parse_args as parse_dpo_args
+from iterative_sft import iterative_loop, parse_args as parse_sft_args
 
 
 def main() -> None:

@@ -1,4 +1,3 @@
-import contextlib
 import os
 import shutil
 from typing import Any, Dict, List, Optional
@@ -23,18 +22,13 @@ class StockfishEngine:
         self.default_time_ms = default_time_ms
         self._engine: Optional[chess.engine.SimpleEngine] = None
 
-    @contextlib.contextmanager
-    def _ensure_engine(self) -> Any:
-        engine_was_running = self._engine is not None
+    def _ensure_engine(self) -> chess.engine.SimpleEngine:
+        """Ensure engine is initialized and return it. Engine stays open for reuse."""
         if self._engine is None:
             if not shutil.which(self.engine_path):
                 raise FileNotFoundError(f"Engine binary not found: {self.engine_path}")
             self._engine = chess.engine.SimpleEngine.popen_uci(self.engine_path)
-        try:
-            yield self._engine
-        finally:
-            if not engine_was_running:
-                self.close()
+        return self._engine
 
     def analyze(
         self,
@@ -67,13 +61,13 @@ class StockfishEngine:
             time=(time_ms / 1000.0) if time_ms else None,
         )
     
-        with self._ensure_engine() as engine:
-            infos = engine.analyse(
-                board,
-                limit=limits,
-                multipv=multipv,
-                root_moves=root_moves,
-            )
+        engine = self._ensure_engine()
+        infos = engine.analyse(
+            board,
+            limit=limits,
+            multipv=multipv,
+            root_moves=root_moves,
+        )
     
         if isinstance(infos, dict):
             infos = [infos]
@@ -97,8 +91,8 @@ class StockfishEngine:
             return []
 
         limits = chess.engine.Limit(depth=depth, time=time_ms / 1000 if time_ms else None)
-        with self._ensure_engine() as engine:
-            info = engine.analyse(board, limit=limits)
+        engine = self._ensure_engine()
+        info = engine.analyse(board, limit=limits)
 
         pv = [uci for uci in self._extract_pv(info, board)]
         return pv[:3]
