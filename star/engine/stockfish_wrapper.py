@@ -9,6 +9,15 @@ import chess.engine
 class StockfishEngine:
     """Lightweight Stockfish wrapper for repeated analysis calls."""
 
+    # Common stockfish installation paths
+    COMMON_PATHS = [
+        "/usr/games/stockfish",           # Ubuntu/Debian apt install
+        "/usr/bin/stockfish",             # Some Linux distros
+        "/usr/local/bin/stockfish",       # Manual install
+        "/opt/homebrew/bin/stockfish",    # macOS Homebrew (Apple Silicon)
+        "/usr/local/Cellar/stockfish/*/bin/stockfish",  # macOS Homebrew (Intel)
+    ]
+
     def __init__(
         self,
         engine_path: str = "stockfish",
@@ -16,17 +25,40 @@ class StockfishEngine:
         default_multipv: int = 1,
         default_time_ms: int = 0,
     ) -> None:
-        self.engine_path = engine_path
+        self.engine_path = self._find_engine(engine_path)
         self.default_depth = default_depth
         self.default_multipv = default_multipv
         self.default_time_ms = default_time_ms
         self._engine: Optional[chess.engine.SimpleEngine] = None
 
+    def _find_engine(self, engine_path: str) -> str:
+        """Find stockfish binary, checking common paths if not in PATH."""
+        # 1. If absolute path provided and exists, use it
+        if os.path.isabs(engine_path) and os.path.isfile(engine_path):
+            return engine_path
+        
+        # 2. Check if in PATH
+        found = shutil.which(engine_path)
+        if found:
+            return found
+        
+        # 3. Check common installation paths
+        for path in self.COMMON_PATHS:
+            if os.path.isfile(path):
+                return path
+        
+        # 4. Return original (will fail later with clear error)
+        return engine_path
+
     def _ensure_engine(self) -> chess.engine.SimpleEngine:
         """Ensure engine is initialized and return it. Engine stays open for reuse."""
         if self._engine is None:
-            if not shutil.which(self.engine_path):
-                raise FileNotFoundError(f"Engine binary not found: {self.engine_path}")
+            if not os.path.isfile(self.engine_path) and not shutil.which(self.engine_path):
+                raise FileNotFoundError(
+                    f"Engine binary not found: {self.engine_path}\n"
+                    f"Tried common paths: {self.COMMON_PATHS}\n"
+                    f"Please install stockfish or specify --engine_path"
+                )
             self._engine = chess.engine.SimpleEngine.popen_uci(self.engine_path)
         return self._engine
 

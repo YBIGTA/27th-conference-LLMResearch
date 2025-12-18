@@ -23,5 +23,7 @@
   "task": "mate",
   "inference_temp": 1.0,
   "no_hint": true,
-  "base_model_path": "/root/27th-conference-LLMResearch/star/LLM_Research/checkpoints/final_model.pth"
+  "device": "cuda",
+  "engine_path": "/usr/games/stockfish",
+  "base_model_path": null
 }

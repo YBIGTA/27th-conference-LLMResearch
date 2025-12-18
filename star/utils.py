@@ -404,8 +404,21 @@ def _load_base_model(model_name_or_dir: str, dtype, trust_remote_code: bool = Tr
     )
 
 
-def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=False, eval=False):
-    model_dtype = torch.bfloat16 if args.precision == "bf16" else torch.float16  # 필요시 확장
+def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=False, eval=False, distributed=True):
+    """
+    Load model and tokenizer with checkpoint support.
+    
+    Args:
+        args: Arguments with precision, lora config, etc.
+        model_path: Path to checkpoint file or HuggingFace directory (or None)
+        model_name: HuggingFace model name as fallback
+        rank: GPU rank (0 for single GPU)
+        cpu_offload: Enable CPU offload for FSDP
+        eval: Use DDP instead of FSDP for evaluation
+        distributed: If False, skip DDP/FSDP wrapping (for single GPU training)
+    """
+    precision = getattr(args, 'precision', 'bf16')
+    model_dtype = torch.bfloat16 if precision == "bf16" else torch.float16
 
     # 1) tokenizer source 결정: model_path가 디렉토리면 거기, 아니면 model_name
     tok_source = model_path if (model_path is not None and os.path.isdir(model_path)) else model_name
@@ -420,7 +433,8 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
     model = _load_base_model(base_source, dtype=model_dtype, trust_remote_code=trust_remote)
 
     # 4) (선택) LoRA 아닌 경우: model_path가 "파일"이면 state_dict/모델 객체 로드
-    if not args.lora:
+    lora_config = getattr(args, 'lora', None)
+    if not lora_config:
         if model_path is not None and os.path.isfile(model_path):
             obj = torch.load(model_path, map_location="cpu")
 
@@ -443,7 +457,8 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
             if state_dict is not None:
                 missing, unexpected = model.load_state_dict(state_dict, strict=False)
                 # strict=False 권장: head mismatch나 key prefix 차이를 흡수
-                # 필요하면 여기서 로그 출력 가능
+                if rank == 0 and (missing or unexpected):
+                    print(f"[Model] Loaded checkpoint with {len(missing)} missing, {len(unexpected)} unexpected keys")
 
         elif model_path is not None and os.path.isdir(model_path):
             # HF dir에서 이미 from_pretrained로 로드했으니 추가 작업 없음
@@ -451,12 +466,13 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
         elif model_path is not None:
             raise FileNotFoundError(f"model_path not found: {model_path}")
 
-        # 분산 래핑
-        if eval:
-            model = model.to(rank)
-            model = DDP(model, device_ids=[rank], find_unused_parameters=True)
-        else:
-            model = fsdp_wrap(args, model, rank, cpu_offload=cpu_offload)
+        # 분산 래핑 (distributed=True일 때만)
+        if distributed:
+            if eval:
+                model = model.to(rank)
+                model = DDP(model, device_ids=[rank], find_unused_parameters=True)
+            else:
+                model = fsdp_wrap(args, model, rank, cpu_offload=cpu_offload)
 
     # 5) LoRA인 경우: base model에 LoRA adapter state 적용
     else:
@@ -465,17 +481,19 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
         peft_config = LoraConfig(
             task_type=TaskType.CAUSAL_LM,
             inference_mode=False,
-            r=args.lora["lora_rank"],
-            lora_alpha=args.lora["lora_alpha"],
-            lora_dropout=args.lora["lora_dropout"],
+            r=lora_config["lora_rank"],
+            lora_alpha=lora_config["lora_alpha"],
+            lora_dropout=lora_config["lora_dropout"],
         )
         model = get_peft_model(model, peft_config).to(model_dtype)
 
-        if eval:
-            model = model.to(rank)
-            model = DDP(model, device_ids=[rank], find_unused_parameters=True)
-        else:
-            model = fsdp_wrap(args, model, rank)
+        # 분산 래핑 (distributed=True일 때만)
+        if distributed:
+            if eval:
+                model = model.to(rank)
+                model = DDP(model, device_ids=[rank], find_unused_parameters=True)
+            else:
+                model = fsdp_wrap(args, model, rank)
 
         # LoRA ckpt는 파일이어야 함
         if model_path is None or not os.path.isfile(model_path):
@@ -492,7 +510,9 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
             new_k = "module." + k if ("module." + k) in model_state_dict else k
             updated[new_k] = v
         model.load_state_dict(updated, strict=False)
-        dist.barrier()
+        
+        if distributed:
+            dist.barrier()
 
         if rank == 0:
             (model.module if isinstance(model, DDP) else model).print_trainable_parameters()
@@ -506,20 +526,40 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
     return model, tokenizer
 
 
-def get_model_tokenizer(args, model_name, rank, eval=False):
-    if args.precision == "bf16":
+def get_model_tokenizer(args, model_name, rank, eval=False, distributed=True):
+    """
+    Load model and tokenizer from HuggingFace.
+    
+    Args:
+        args: Arguments with precision, lora config, etc.
+        model_name: HuggingFace model name
+        rank: GPU rank (0 for single GPU)
+        eval: Use DDP instead of FSDP for evaluation
+        distributed: If False, skip DDP/FSDP wrapping (for single GPU training)
+    """
+    precision = getattr(args, 'precision', 'bf16')
+    if precision == "bf16":
         model_dtype = torch.bfloat16
-    if model_name == "Qwen/Qwen2.5-3B" :
-        model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True,    attn_implementation="flash_attention_2",torch_dtype=torch.bfloat16)
-    else :
-        model = AutoModelForCausalLM.from_pretrained(model_name,torch_dtype=torch.bfloat16)
-    if args.lora:
+    else:
+        model_dtype = torch.float16
+        
+    if model_name == "Qwen/Qwen2.5-3B":
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, trust_remote_code=True, 
+            attn_implementation="flash_attention_2", 
+            torch_dtype=model_dtype
+        )
+    else:
+        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=model_dtype)
+    
+    lora_config = getattr(args, 'lora', None)
+    if lora_config:
         from peft import LoraConfig, TaskType, get_peft_model
         peft_config = LoraConfig(
             task_type=TaskType.CAUSAL_LM, inference_mode=False,
-            r=args.lora["lora_rank"],
-            lora_alpha=args.lora["lora_alpha"],
-            lora_dropout=args.lora["lora_dropout"],
+            r=lora_config["lora_rank"],
+            lora_alpha=lora_config["lora_alpha"],
+            lora_dropout=lora_config["lora_dropout"],
         )
         model = get_peft_model(model, peft_config)
         model = model.to(model_dtype)
@@ -535,11 +575,13 @@ def get_model_tokenizer(args, model_name, rank, eval=False):
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
 
-    if eval:
-        model.to(rank)
-        model = DDP(model, device_ids=[rank], find_unused_parameters=True)
-    else:
-        model = fsdp_wrap(args, model, rank)
+    # 분산 래핑 (distributed=True일 때만)
+    if distributed:
+        if eval:
+            model.to(rank)
+            model = DDP(model, device_ids=[rank], find_unused_parameters=True)
+        else:
+            model = fsdp_wrap(args, model, rank)
     return model, tokenizer
 
 

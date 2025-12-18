@@ -6,6 +6,8 @@ import re
 from typing import Dict, List, Optional
 
 import torch
+import torch.distributed as dist
+import torch.multiprocessing as mp
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_scheduler
 
@@ -13,6 +15,15 @@ from data.io import append_jsonl
 from data.schema import EngineConfig
 from engine.stockfish_wrapper import StockfishEngine
 from rationale.verify import parse_rationale_text, verify_rationale
+from utils import (
+    load_jsonl, 
+    log_args, 
+    collate_fn,
+    get_model_tokenizer,
+    get_loaded_model_tokenizer,
+    setup,
+    cleanup,
+)
 
 ROOT_DIR = os.path.dirname(__file__)
 DEFAULT_MATE_TRAIN = os.path.join(ROOT_DIR, "datasets", "data_mate", "train_stripped.jsonl")
@@ -25,16 +36,18 @@ def _extract_fen(question: str) -> Optional[str]:
 
 
 def load_mate_fens(path: str) -> List[str]:
+    """Load FEN strings from a JSONL file using utils.load_jsonl."""
     fens: List[str] = []
     if not path or not os.path.exists(path):
         return fens
-    with open(path, "r", encoding="utf-8") as fh:
-        for line in fh:
-            record = json.loads(line)
-            question = record.get("question", "")
-            fen = _extract_fen(question)
-            if fen:
-                fens.append(fen)
+    
+    # Use load_jsonl from utils.py
+    records = load_jsonl(path)
+    for record in records:
+        question = record.get("question", "")
+        fen = _extract_fen(question)
+        if fen:
+            fens.append(fen)
     return fens
 
 
@@ -181,14 +194,16 @@ def generate_pair(
     cp_scale: float,
 ) -> Optional[Dict[str, str]]:
     prompt = build_prompt(fen, include_rationale)
-    encoded = tokenizer(prompt, return_tensors="pt")
-    output = model.generate(
-        **{k: v for k, v in encoded.items()},
-        max_new_tokens=64 if include_rationale else 8,
-        do_sample=True,
-        top_k=20,
-        pad_token_id=tokenizer.eos_token_id,
-    )
+    encoded = tokenizer(prompt, return_tensors="pt").to(model.device)
+    
+    with torch.no_grad():
+        output = model.generate(
+            **encoded,
+            max_new_tokens=32 if include_rationale else 6,  # 토큰 수 줄임 (체스 수는 짧음)
+            do_sample=False,  # Greedy decoding = 더 빠름
+            pad_token_id=tokenizer.eos_token_id,
+            use_cache=True,  # KV cache = 더 빠름
+        )
     text = tokenizer.decode(output[0], skip_special_tokens=True)
     parsed = parse_rationale_text(text)
     model_move = parsed.get("move")
@@ -222,12 +237,55 @@ def generate_pair(
     return pair
 
 
+def load_model_and_tokenizer(args, rank: int = 0, distributed: bool = False):
+    """
+    Load model and tokenizer using utils.py functions.
+    
+    Args:
+        args: Training arguments (must have model_name, base_model_path, precision, lora, device)
+        rank: GPU rank (0 for single GPU mode)
+        distributed: If True, use DDP/FSDP wrapping
+    """
+    model_path = getattr(args, 'base_model_path', None)
+    if model_path and model_path != "null":
+        # Use get_loaded_model_tokenizer from utils.py
+        model, tokenizer = get_loaded_model_tokenizer(
+            args, 
+            model_path, 
+            args.model_name, 
+            rank, 
+            eval=False,
+            distributed=distributed,
+        )
+        if rank == 0:
+            print(f"[DPO] Model loaded from checkpoint: {model_path}")
+    else:
+        # Use get_model_tokenizer from utils.py (loads from HuggingFace)
+        model, tokenizer = get_model_tokenizer(
+            args, 
+            args.model_name, 
+            rank, 
+            eval=False,
+            distributed=distributed,
+        )
+        if rank == 0:
+            print(f"[DPO] Model loaded from HuggingFace: {args.model_name}")
+    
+    # Move to device if not distributed (distributed handles this internally)
+    if not distributed:
+        device = getattr(args, 'device', 'cpu')
+        model.to(device)
+    
+    return model, tokenizer
+
+
 def iterative_dpo(args: argparse.Namespace) -> None:
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(args.model_name)
-    model.to(args.device)
+    """Main DPO training loop (called via iterative_cli.py or directly)."""
+    distributed = getattr(args, 'distributed', False) and getattr(args, 'world_size', 1) > 1
+    rank = getattr(args, '_rank', 0)  # Set by fsdp_main for distributed
+    
+    # Load model and tokenizer using utils.py (get_loaded_model_tokenizer or get_model_tokenizer)
+    model, tokenizer = load_model_and_tokenizer(args, rank=rank, distributed=distributed)
 
     fens = args.fens or load_mate_fens(args.mate_train_path)
     if not fens:
@@ -244,7 +302,9 @@ def iterative_dpo(args: argparse.Namespace) -> None:
     os.makedirs(args.out_dir, exist_ok=True)
     for iteration in range(args.iterations):
         pairs: List[Dict[str, str]] = []
-        for fen in fens:
+        total_fens = len(fens)
+        print(f"[DPO Iter {iteration}] Processing {total_fens} FENs...")
+        for i, fen in enumerate(fens):
             pair = generate_pair(
                 model,
                 tokenizer,
@@ -256,13 +316,34 @@ def iterative_dpo(args: argparse.Namespace) -> None:
             )
             if pair:
                 pairs.append(pair)
+            # 진행률 10%마다 출력
+            if (i + 1) % max(1, total_fens // 10) == 0:
+                print(f"  [{i+1}/{total_fens}] pairs: {len(pairs)}")
         if not pairs:
             continue
         append_jsonl(os.path.join(args.out_dir, f"dpo_iter_{iteration}.jsonl"), pairs)
         dataset = PreferenceDataset(tokenizer, pairs)
         loader = DataLoader(dataset, batch_size=1, shuffle=True)
-        optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
-        scheduler = get_scheduler("linear", optimizer=optimizer, num_warmup_steps=0, num_training_steps=len(loader) * args.epochs)
+        
+        # Optimizer setup (similar to get_optimizer_scheduler_step_based in utils.py)
+        optimizer_type = getattr(args, 'optimizer', 'AdamW')
+        weight_decay = getattr(args, 'weight_decay', 0.01)
+        warm_up_steps = getattr(args, 'warm_up_steps', 0)
+        
+        if optimizer_type == "AdamW":
+            optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=weight_decay)
+        elif optimizer_type == "Adam":
+            optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+        else:
+            optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=weight_decay)
+        
+        # Scheduler with warm-up (from utils.py pattern)
+        total_steps = len(loader) * args.epochs
+        def lr_lambda(current_step: int):
+            if current_step < warm_up_steps:
+                return float(current_step) / float(max(1, warm_up_steps))
+            return 1.0
+        scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
 
         model.train()
         for _ in range(args.epochs):
@@ -295,6 +376,12 @@ def iterative_dpo(args: argparse.Namespace) -> None:
             else None
         )
         metrics = {"iteration": iteration, "train": train_metrics, "test": test_metrics}
+        
+        # Use log_args from utils.py for cumulative logging
+        metrics_log_path = os.path.join(args.out_dir, "dpo_metrics_log.json")
+        log_args(metrics_log_path, **metrics)
+        
+        # Also save individual iteration metrics
         metrics_path = os.path.join(args.out_dir, f"dpo_metrics_iter_{iteration}.json")
         with open(metrics_path, "w", encoding="utf-8") as f:
             json.dump(metrics, f, ensure_ascii=False, indent=2)
@@ -321,8 +408,16 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument("--include_rationale", action="store_true")
     parser.add_argument("--beta", type=float, default=0.1)
     parser.add_argument("--lr", type=float, default=5e-5)
+    parser.add_argument("--optimizer", type=str, default="AdamW", help="Optimizer type: AdamW or Adam (from utils.py pattern)")
+    parser.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay for optimizer")
+    parser.add_argument("--warm_up_steps", type=int, default=0, help="Number of warmup steps for scheduler")
     parser.add_argument("--device", type=str, default="cpu")
+    parser.add_argument("--precision", type=str, default="bf16", help="Model precision: bf16 or fp16")
+    parser.add_argument("--distributed", action="store_true", help="Enable distributed training with DDP/FSDP (uses utils.py setup/cleanup)")
+    parser.add_argument("--world_size", type=int, default=1, help="Number of GPUs for distributed training")
+    parser.add_argument("--lora", type=json.loads, default=None, help="LoRA config as JSON string, e.g. '{\"lora_rank\": 32, \"lora_alpha\": 64, \"lora_dropout\": 0.1}'")
     parser.add_argument("--cp_scale", type=float, default=200.0)
+    parser.add_argument("--base_model_path", type=str, default=None, help="Path to base model checkpoint (file or directory). If None, loads from model_name.")
     parser.add_argument("--fens", nargs="*", help="Optional list of FEN strings; defaults to data_mate train split")
     parser.add_argument("--eval_fens", nargs="*", help="Optional held-out FEN strings for evaluation")
     parser.add_argument(
@@ -346,9 +441,40 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def fsdp_main(rank: int, world_size: int, args: argparse.Namespace) -> None:
+    """Entry point for distributed training (called by mp.spawn)."""
+    setup(rank, world_size)
+    torch.cuda.set_device(rank)
+    
+    # Set distributed flag
+    args.distributed = True
+    args.world_size = world_size
+    args._rank = rank  # Internal use for distributed
+    
+    try:
+        iterative_dpo(args)
+    finally:
+        cleanup()
+
+
 def main() -> None:
+    """Direct execution entry point (supports --distributed flag)."""
     args = parse_args()
-    iterative_dpo(args)
+    
+    distributed = getattr(args, 'distributed', False) and getattr(args, 'world_size', 1) > 1
+    
+    if distributed:
+        # Distributed training using utils.py setup/cleanup
+        print(f"[DPO] Starting distributed training with {args.world_size} GPUs")
+        mp.spawn(
+            fsdp_main,
+            args=(args.world_size, args),
+            nprocs=args.world_size,
+            join=True,
+        )
+    else:
+        # Single GPU training (same as iterative_cli.py call)
+        iterative_dpo(args)
 
 
 if __name__ == "__main__":
