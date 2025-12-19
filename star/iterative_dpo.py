@@ -8,6 +8,7 @@ from typing import Dict, List, Optional
 import torch
 import torch.distributed as dist
 import torch.multiprocessing as mp
+import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_scheduler
 
@@ -160,65 +161,211 @@ def evaluate_model(
     return {"count": total, "accuracy": accuracy, "avg_cp_gap": avg_cp_gap}
 
 
-def logprob_response(model, tokenizer, prompt: str, response: str) -> torch.Tensor:
-    prompt_ids = tokenizer(prompt, return_tensors="pt").to(model.device)
-    full = tokenizer(prompt + response, return_tensors="pt").to(model.device)
-    with torch.no_grad():
-        logits = model(**full).logits
-    log_probs = torch.log_softmax(logits, dim=-1)
-    input_ids = full["input_ids"]
-    prompt_len = prompt_ids["input_ids"].shape[1]
-    resp_ids = input_ids[:, prompt_len:]
-    resp_log_probs = log_probs[:, prompt_len - 1 : input_ids.shape[1] - 1, :]
-    gathered = resp_log_probs.gather(2, resp_ids.unsqueeze(-1)).squeeze(-1)
-    return gathered.sum(dim=-1)
-
-
-def dpo_loss(model, tokenizer, pairs: List[Dict[str, str]], beta: float = 0.1) -> torch.Tensor:
-    losses = []
-    for pair in pairs:
-        lp_chosen = logprob_response(model, tokenizer, pair["prompt"], pair["chosen"])
-        lp_rejected = logprob_response(model, tokenizer, pair["prompt"], pair["rejected"])
-        weight = pair.get("weight", 1.0)
-        losses.append(-torch.logsigmoid(beta * (lp_chosen - lp_rejected)) * weight)
-    return torch.stack(losses).mean()
-
-
-def generate_pair(
+def get_batch_logprobs(
     model,
     tokenizer,
+    prompts: List[str],
+    responses: List[str],
+) -> torch.Tensor:
+    """
+    배치 단위로 response의 log probability 계산.
+    DPO 논문 구현 참고: https://arxiv.org/abs/2305.18290
+    """
+    batch_logprobs = []
+    
+    for prompt, response in zip(prompts, responses):
+        # 토큰화
+        prompt_ids = tokenizer(prompt, return_tensors="pt", add_special_tokens=False)
+        full_ids = tokenizer(prompt + response, return_tensors="pt", add_special_tokens=True)
+        
+        prompt_ids = {k: v.to(model.device) for k, v in prompt_ids.items()}
+        full_ids = {k: v.to(model.device) for k, v in full_ids.items()}
+        
+        prompt_len = prompt_ids["input_ids"].shape[1]
+        
+        # Forward pass (gradient 필요)
+        outputs = model(**full_ids)
+        logits = outputs.logits
+        
+        # Log softmax
+        log_probs = F.log_softmax(logits, dim=-1)
+        
+        # Response 부분의 log prob만 추출
+        # logits[i]는 token[i+1]을 예측하므로, prompt_len-1부터 시작
+        input_ids = full_ids["input_ids"]
+        resp_ids = input_ids[:, prompt_len:]  # response tokens
+        
+        # 각 response token의 log prob 추출
+        resp_log_probs = log_probs[:, prompt_len - 1 : -1, :]  # [batch, resp_len, vocab]
+        
+        # 실제 token에 해당하는 log prob gather
+        token_log_probs = resp_log_probs.gather(2, resp_ids.unsqueeze(-1)).squeeze(-1)
+        
+        # 합산 (sequence-level log prob)
+        batch_logprobs.append(token_log_probs.sum(dim=-1))
+    
+    return torch.cat(batch_logprobs)
+
+
+def dpo_loss(
+    model, 
+    tokenizer, 
+    pairs: List[Dict[str, str]], 
+    beta: float = 0.1,
+    reference_free: bool = True,
+) -> torch.Tensor:
+    """
+    DPO (Direct Preference Optimization) Loss 계산.
+    
+    논문: https://arxiv.org/abs/2305.18290
+    L_DPO = -E[log σ(β * (log π(y_w|x) - log π(y_l|x)))]
+    
+    Args:
+        model: 학습 중인 모델
+        tokenizer: 토크나이저
+        pairs: [{"prompt": ..., "chosen": ..., "rejected": ..., "weight": ...}, ...]
+        beta: KL penalty 계수 (기본 0.1)
+        reference_free: True면 reference model 없이 학습 (간단한 버전)
+    """
+    if not pairs:
+        return torch.tensor(0.0, device=next(model.parameters()).device, requires_grad=True)
+    
+    total_loss = torch.tensor(0.0, device=next(model.parameters()).device, requires_grad=True)
+    
+    for pair in pairs:
+        prompt = pair["prompt"]
+        chosen = pair["chosen"]
+        rejected = pair["rejected"]
+        weight = pair.get("weight", 1.0)
+        
+        # Chosen과 rejected의 log probability 계산
+        chosen_logprob = get_batch_logprobs(model, tokenizer, [prompt], [chosen])
+        rejected_logprob = get_batch_logprobs(model, tokenizer, [prompt], [rejected])
+        
+        # DPO loss: -log σ(β * (log π(chosen) - log π(rejected)))
+        logits_diff = beta * (chosen_logprob - rejected_logprob)
+        loss = -F.logsigmoid(logits_diff) * weight
+        
+        total_loss = total_loss + loss.mean()
+    
+    return total_loss / len(pairs)
+
+
+def generate_moves_batch(
+    model,
+    tokenizer,
+    fens: List[str],
+    include_rationale: bool,
+    batch_size: int = 8,
+) -> List[str]:
+    """배치 단위로 모델 추론 수행 (훨씬 빠름)"""
+    import time
+    
+    all_texts = []
+    prompts = [build_prompt(fen, include_rationale) for fen in fens]
+    
+    # 디버그: 모델 위치 확인
+    print(f"[DEBUG] Model device: {next(model.parameters()).device}")
+    print(f"[DEBUG] Model dtype: {next(model.parameters()).dtype}")
+    print(f"[DEBUG] Total prompts: {len(prompts)}, batch_size: {batch_size}")
+    
+    model.eval()
+    with torch.no_grad():
+        for i in range(0, len(prompts), batch_size):
+            batch_prompts = prompts[i:i + batch_size]
+            
+            t0 = time.time()
+            encoded = tokenizer(
+                batch_prompts, 
+                return_tensors="pt", 
+                padding=True,
+                truncation=True,
+            ).to(model.device)
+            t1 = time.time()
+            
+            print(f"[DEBUG] Batch {i//batch_size}: input_ids shape={encoded['input_ids'].shape}, tokenize time={t1-t0:.2f}s")
+            
+            t2 = time.time()
+            outputs = model.generate(
+                **encoded,
+                max_new_tokens=32 if include_rationale else 8,
+                do_sample=False,
+                pad_token_id=tokenizer.eos_token_id,
+                use_cache=True,
+            )
+            t3 = time.time()
+            
+            print(f"[DEBUG] Generate time: {t3-t2:.2f}s, output shape={outputs.shape}")
+            
+            # 배치 디코딩
+            texts = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+            all_texts.extend(texts)
+    
+    return all_texts
+
+
+def extract_move_simple(text: str) -> Optional[str]:
+    """단순 MOVE: xxx 형식에서 move 추출"""
+    match = re.search(r"MOVE:\s*(\S+)", text)
+    if match:
+        move = match.group(1).strip()
+        # <uci> 같은 템플릿이 아닌 실제 수인지 확인 (예: e2e4, b1c3)
+        if re.match(r'^[a-h][1-8][a-h][1-8][qrbn]?$', move):
+            return move
+    
+    # 2. 마지막 줄에서 UCI 패턴 찾기 (few-shot 프롬프트 후 바로 수가 나오는 경우)
+    lines = text.strip().split('\n')
+    for line in reversed(lines):
+        # UCI 수 패턴: a-h + 1-8 + a-h + 1-8 + optional promotion (예: e2e4, e7e8q)
+        uci_match = re.search(r'\b([a-h][1-8][a-h][1-8][qrbn]?)\b', line)
+        if uci_match:
+            return uci_match.group(1)
+    
+    return None
+
+
+def generate_pair_from_text(
     fen: str,
+    model_text: str,
     engine: StockfishEngine,
     engine_cfg: EngineConfig,
     include_rationale: bool,
     cp_scale: float,
 ) -> Optional[Dict[str, str]]:
+    """미리 생성된 텍스트로부터 pair 생성"""
     prompt = build_prompt(fen, include_rationale)
-    encoded = tokenizer(prompt, return_tensors="pt").to(model.device)
     
-    with torch.no_grad():
-        output = model.generate(
-            **encoded,
-            max_new_tokens=32 if include_rationale else 6,  # 토큰 수 줄임 (체스 수는 짧음)
-            do_sample=False,  # Greedy decoding = 더 빠름
-            pad_token_id=tokenizer.eos_token_id,
-            use_cache=True,  # KV cache = 더 빠름
-        )
-    text = tokenizer.decode(output[0], skip_special_tokens=True)
-    parsed = parse_rationale_text(text)
-    model_move = parsed.get("move")
+    # rationale 모드면 전체 파싱, 아니면 move만 추출
+    if include_rationale:
+        parsed = parse_rationale_text(model_text)
+        model_move = parsed.get("move")
+    else:
+        parsed = {"move": None, "claim": None, "evidence_pv": None, "contrast_move": None, "contrast_pv": None}
+        model_move = extract_move_simple(model_text)
 
+    # Stockfish 분석
     evals = engine.analyze(fen, multipv=engine_cfg.multipv, depth=engine_cfg.depth, time_ms=engine_cfg.time_ms)
-    if not evals:
+    if not evals or len(evals) < 2:
         return None
+    
     best_eval = evals[0]
     chosen_move = best_eval.get("move")
-    if not chosen_move or not model_move or chosen_move == model_move:
+    if not chosen_move:
         return None
-
-    model_eval = next((ev for ev in evals if ev.get("move") == model_move), None)
+    
+    # 모델이 유효한 수를 생성하지 못했으면, Stockfish의 2번째 수를 rejected로 사용
+    if not model_move or model_move == chosen_move:
+        # 차선 수를 rejected로 사용 (첫 iteration 부트스트랩)
+        second_eval = evals[1]
+        model_move = second_eval.get("move")
+        if not model_move or model_move == chosen_move:
+            return None
+        rejected_cp = second_eval.get("cp")
+    else:
+        model_eval = next((ev for ev in evals if ev.get("move") == model_move), None)
+        rejected_cp = model_eval.get("cp") if model_eval else None
+    
     chosen_cp = best_eval.get("cp")
-    rejected_cp = model_eval.get("cp") if model_eval else None
     weight = 1.0
     if chosen_cp is not None and rejected_cp is not None and cp_scale > 0:
         weight = min(abs(chosen_cp - rejected_cp) / cp_scale, 1.0)
@@ -235,6 +382,22 @@ def generate_pair(
         "weight": weight,
     }
     return pair
+
+
+def generate_pair(
+    model,
+    tokenizer,
+    fen: str,
+    engine: StockfishEngine,
+    engine_cfg: EngineConfig,
+    include_rationale: bool,
+    cp_scale: float,
+) -> Optional[Dict[str, str]]:
+    """단일 FEN 처리 (하위 호환성 유지)"""
+    texts = generate_moves_batch(model, tokenizer, [fen], include_rationale, batch_size=1)
+    if not texts:
+        return None
+    return generate_pair_from_text(fen, texts[0], engine, engine_cfg, include_rationale, cp_scale)
 
 
 def load_model_and_tokenizer(args, rank: int = 0, distributed: bool = False):
@@ -273,8 +436,13 @@ def load_model_and_tokenizer(args, rank: int = 0, distributed: bool = False):
     
     # Move to device if not distributed (distributed handles this internally)
     if not distributed:
-        device = getattr(args, 'device', 'cpu')
-        model.to(device)
+        device = getattr(args, 'device', 'cuda')  # 기본값 cuda로 변경
+        if device == 'cuda' and not torch.cuda.is_available():
+            print("[WARNING] CUDA not available, falling back to CPU")
+            device = 'cpu'
+        print(f"[DPO] Moving model to {device}...")
+        model = model.to(device)
+        print(f"[DPO] Model is now on: {next(model.parameters()).device}")
     
     return model, tokenizer
 
@@ -300,17 +468,25 @@ def iterative_dpo(args: argparse.Namespace) -> None:
     engine_cfg = EngineConfig(name="stockfish", depth=args.depth, multipv=args.multipv, time_ms=args.time_ms)
 
     os.makedirs(args.out_dir, exist_ok=True)
+    batch_size = getattr(args, 'batch_size', 8)  # 배치 크기 (기본 8)
+    
     for iteration in range(args.iterations):
         pairs: List[Dict[str, str]] = []
         total_fens = len(fens)
-        print(f"[DPO Iter {iteration}] Processing {total_fens} FENs...")
-        for i, fen in enumerate(fens):
-            pair = generate_pair(
-                model,
-                tokenizer,
-                fen,
-                engine,
-                engine_cfg,
+        print(f"[DPO Iter {iteration}] Generating moves for {total_fens} FENs (batch_size={batch_size})...")
+        
+        # 1단계: 배치로 모든 모델 출력 생성 (빠름!)
+        all_texts = generate_moves_batch(
+            model, tokenizer, fens, 
+            include_rationale=args.include_rationale,
+            batch_size=batch_size,
+        )
+        print(f"  -> Model inference done. Processing with Stockfish...")
+        
+        # 2단계: Stockfish로 pair 생성
+        for i, (fen, text) in enumerate(zip(fens, all_texts)):
+            pair = generate_pair_from_text(
+                fen, text, engine, engine_cfg,
                 include_rationale=args.include_rationale,
                 cp_scale=args.cp_scale,
             )
