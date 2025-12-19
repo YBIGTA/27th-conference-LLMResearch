@@ -163,10 +163,13 @@ def update_minheap_new(updated_winlose, heap, num_used_data):
 
 def update_minheap_winlose_front(heap, prev_winlose, new_winlose, num_pop_data):
     for i in range(num_pop_data):
+        # p1은 마지막 샘플링 iter인 \tilde{t}, p2는 winrate w, item이 id_7 이런식으로 생긴 문제번호라고함
         p1, p2, item = heap.pop()
 
+        # \tilde{t}, w 업데이트해서 heap에 넣어주고
         heap.push(new_winlose[item]["iter"], new_winlose[item]["win"]/new_winlose[item]["total"], item)
 
+        # 전역통계도 업데이트
         prev_winlose[item]["iter"] = new_winlose[item]["iter"]
         prev_winlose[item]["win"] = new_winlose[item]["win"]
         prev_winlose[item]["total"] = new_winlose[item]["total"]

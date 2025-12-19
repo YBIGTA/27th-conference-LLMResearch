@@ -160,6 +160,7 @@ def train_model():
             model_cmd += f" --delete_path={delete_path}"
         # accumulate 할거면 직전모델 경로 추가
         if args.accumulate == True and cur_iter != 1:
+            # checkpoints/svamp_qwen_adastar_new_square_10_23/step_2208/lm.pt 처럼 생김
             model_path = f"{args.base_model_location}/{experiment_name}_{cur_iter - 1}/step_{log_gen[-1]}/lm.pt"
             model_cmd += f" --model_path={model_path}"
 

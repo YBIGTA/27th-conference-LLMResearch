@@ -131,7 +131,7 @@ def train_step_based(args, model, tokenizer, rank, world_size, train_loader, opt
             ddp_loss[0] += loss.item() * args.grad_accum
             ddp_loss[1] += len(input_ids)
 
-        # 이번 step에서 사용한 데이터 인덱스 수합.
+        # 이번 step에서 사용한 모든 데이터 인덱스 수합.
         # 마이크로배치 인덱스 Tensor형태면 int 형으로 바꿔주고
         step_batch_indices = [int(idx) if isinstance(idx, torch.Tensor) else idx for idx in step_batch_indices]
         # 리스트형태라서 Tensor로 바꾸고 GPU로 옮겨줌
@@ -232,7 +232,7 @@ def train_step_based(args, model, tokenizer, rank, world_size, train_loader, opt
         # tqdm바도 업데이트
         progress_bar.update(1)
 
-    # 모든 step 다 돌고 이번 iter 훈련 끝났으면, rank가 0일때 사용한 데이터 최종본 로그작성
+    # 모든 step 다 돌고 이번 iter 훈련 끝났으면, 사용한 데이터 최종본 로그작성
     if rank == 0:
         final_stats = {
             "iter": args.exp_iter,
@@ -312,7 +312,7 @@ def fsdp_main(rank, world_size, args):
             model, tokenizer = get_model_tokenizer(args, args.model_name, rank)
             if rank == 0:
                 print("[Train] base model path == None, using hf model")
-    # 체크포인트 경로가 있으면 모델로 그 체크포인트 사용
+    # checkpoints/svamp_qwen_adastar_new_square_10_23/step_2208/lm.pt 처럼 체크포인트 경로가 있으면 모델로 그 체크포인트 사용
     else:
         model, tokenizer = get_loaded_model_tokenizer(args, args.model_path, args.model_name, rank)
         if rank == 0:
