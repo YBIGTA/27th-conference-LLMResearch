@@ -422,12 +422,12 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
 
     # 1) tokenizer source 결정: model_path가 디렉토리면 거기, 아니면 model_name
     tok_source = model_path if (model_path is not None and os.path.isdir(model_path)) else model_name
-
+    print("tok_source",tok_source)
     # 2) base model 로드 source 결정
     #    - model_path가 HF 디렉토리면 거기서 base 모델을 로드 (가장 자연스러움)
     #    - 아니면 model_name에서 base 모델 로드 후, model_path 파일(state_dict/LoRA) 적용
     base_source = model_path if (model_path is not None and os.path.isdir(model_path)) else model_name
-
+    print("base_source",base_source)
     # 3) base model load
     trust_remote = True  # Qwen 포함해서 대체로 안전
     model = _load_base_model(base_source, dtype=model_dtype, trust_remote_code=trust_remote)
@@ -518,7 +518,7 @@ def get_loaded_model_tokenizer(args, model_path, model_name, rank, cpu_offload=F
             (model.module if isinstance(model, DDP) else model).print_trainable_parameters()
 
     # 6) tokenizer 설정
-    tokenizer = AutoTokenizer.from_pretrained(tok_source, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(tok_source, trust_remote_code=True,fix_mistral_regex=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
@@ -570,7 +570,7 @@ def get_model_tokenizer(args, model_name, rank, eval=False, distributed=True):
             else:
                 model.print_trainable_parameters()
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name,fix_mistral_regex=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
